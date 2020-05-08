@@ -16,10 +16,10 @@ let config = {
     type: Phaser.CANVAS,
     width: 640, // TODO: We might want to change this
     height: 480, // TODO: We might want to change this
-    scene: [Menu],
+    scene: [Menu,Level1],
 };
 // Starting the Phaser game with the object config as a param
 let game = new Phaser.Game(config);
 
 // Reserve keyboard variables
-let keyUP;
+//let keyUP;
