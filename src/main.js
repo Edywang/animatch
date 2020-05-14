@@ -14,12 +14,16 @@ console.log("JS File Loaded Successfully");
 let config = {
     // Render type: OpenGL or Canvas; Choosing Canvas for our type of art
     type: Phaser.CANVAS,
-    width: 640, // TODO: We might want to change this
-    height: 480, // TODO: We might want to change this
+    width: 480, // TODO: We might want to change this
+    height: 640, // TODO: We might want to change this
     scene: [Menu,Level1],
+};
+let gameConfig = {
+    tileSize: 100,
 };
 // Starting the Phaser game with the object config as a param
 let game = new Phaser.Game(config);
+let typeList, tileArray;
 
 // Reserve keyboard variables
 //let keyUP;

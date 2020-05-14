@@ -47,7 +47,7 @@ class Menu extends Phaser.Scene {
         }
         this.scoreLeft = this.add.text(180, 180, 'Press ↑ to go up and ↓ to go down', textConfig);*/
         //Start Button
-        var button = this.add.sprite(175,200,`start`).setScale(0.5,0.5).setOrigin(0,0).setInteractive();
+        var button = this.add.sprite(95,200,`start`).setScale(0.5,0.5).setOrigin(0,0).setInteractive();
         //Mouse Hover Button
         button.on('pointerover',function(){});
         //Mouse Leaves Button
