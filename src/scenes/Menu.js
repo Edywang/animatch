@@ -19,33 +19,6 @@ class Menu extends Phaser.Scene {
     }
     
     create(){
-        // Displaying the Title
-        /*let titleConfig = {
-            fontFamily: 'Courier',
-            fontSize: '56px',
-            backgroundColor: '#000000',
-            color: '#FFFFFF',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-        }
-        this.title = this.add.text(320, 100, "Infinite Football", titleConfig);
-        this.title.x = 320 - this.title.width/2; 
-
-        // Displaying the score
-        let textConfig = {
-            fontFamily: 'Courier',
-            fontSize: '14px',
-            color: '#ffffff',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-        }
-        this.scoreLeft = this.add.text(180, 180, 'Press ↑ to go up and ↓ to go down', textConfig);*/
         //Start Button
         var button = this.add.sprite(95,200,`start`).setScale(0.5,0.5).setOrigin(0,0).setInteractive();
         //Mouse Hover Button
