@@ -50,20 +50,33 @@ class Level1 extends Phaser.Scene {
     }
     update() {
         if(tileSelected2 != null){
-            //Temp the tiles
-            var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
-            var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
-            //Adjust the tiles
-            holdTile.x = spacing*tileSelected2[1] + offsetX;
-            holdTile.y = spacing*tileSelected2[0] + offsetY;
-            holdTile2.x = spacing*tileSelected1[1] + offsetX;
-            holdTile2.y = spacing*tileSelected1[0] + offsetY;
-            tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
-            tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
-            //Reset tiles selected
-            tileSelected1 = null;
-            tileSelected2 = null;
-            console.log('swapped');
+            //If adjacent swap tiles
+            if((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
+                && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
+                || (tileSelected2[0] == tileSelected1[0] && tileSelected2[0] == tileSelected1[0]
+                && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1)){
+                //Temp the tiles
+                var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
+                var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
+                //Adjust the tiles
+                holdTile.x = spacing*tileSelected2[1] + offsetX;
+                holdTile.y = spacing*tileSelected2[0] + offsetY;
+                holdTile2.x = spacing*tileSelected1[1] + offsetX;
+                holdTile2.y = spacing*tileSelected1[0] + offsetY;
+                tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
+                tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
+                holdTile.setScale(1,1).setOrigin(0,0);
+                //Reset tiles selected
+                tileSelected1 = null;
+                tileSelected2 = null;
+                holdTile = null;
+                holdTile2 = null;
+                //console.log('swapped');
+            }
+            //Else reset 2nd tile
+            else{
+                tileSelected2 = null;
+            }
         }
         //Length
         /*for(var i = 0; i < tileArray[0].length; i++){
@@ -77,6 +90,7 @@ class Level1 extends Phaser.Scene {
     selected(tempTile){
         if(tileSelected1 == null){
             tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
+            tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
             console.log(tileArray[tileSelected1[0]][tileSelected1[1]].texture.key);
 
         }else{
@@ -84,7 +98,7 @@ class Level1 extends Phaser.Scene {
             console.log(tileArray[tileSelected2[0]][tileSelected2[1]].texture.key);
 
         }
-        console.log(tempTile.x);
-        console.log(tempTile.y);
+        //console.log(tempTile.x);
+        //console.log(tempTile.y);
     }
 }
