@@ -11,11 +11,6 @@ class Menu extends Phaser.Scene {
     preload() {
         //580 x 220 Start Button
         this.load.image('start','./assets/Start.png');
-        //580 x 220 Credits Button
-        //this.load.image('credits','./assets/Credits.png');
-        //this.load.audio('bg_music', './assets/bg_music.mp3');
-        //this.load.audio('blip', './assets/blip.wav');
-        //
     }
     
     create(){
