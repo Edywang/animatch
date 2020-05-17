@@ -69,7 +69,11 @@ class Level1 extends Phaser.Scene {
         else{
             //Store the array values of the tile
             tileSelected2 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
-
+            if(tileSelected2[0] == tileSelected1[0] && tileSelected2[1] == tileSelected1[1]){
+                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1,1).setOrigin(0,0);
+                tileSelected1 = null;
+                tileSelected2 = null;
+            }
         }
     }
 }
@@ -93,6 +97,8 @@ checkAdjacent=function(){
         tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
         holdTile.setScale(1,1).setOrigin(0,0);
         //Reset tiles selected
+        console.log(tileSelected2[0],tileSelected2[1]);
+        checkInARow(tileSelected2[0],tileSelected2[1]);
         tileSelected1 = null;
         tileSelected2 = null;
         holdTile = null;
@@ -103,6 +109,29 @@ checkAdjacent=function(){
         tileSelected2 = null;
     }
 }
-checkInARow=function(x1,y1,x2,y2){
-    //Do stuff
+checkInARow=function(y1,x1){
+    console.log('\nup');
+    console.log(tileArray[y1][x1].texture.key);
+    console.log(tileArray[y1+1][x1].texture.key);
+    if(y1+1 < tileArray.size-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
+        console.log('in a row up');
+    }
+    console.log('\ndown');
+    console.log(tileArray[y1][x1].texture.key);
+    console.log(tileArray[y1-1][x1].texture.key);
+    if(y1-1 > 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
+        console.log('in a row down');
+    }
+    console.log('\nright');
+    console.log(tileArray[y1][x1].texture.key);
+    console.log(tileArray[y1][x1+1].texture.key);
+    if(x1+1 < tileArray.size-1 && (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
+        console.log('in a row right');
+    }
+    console.log('\nleft');
+    console.log(tileArray[y1][x1].texture.key);
+    console.log(tileArray[y1][x1-1].texture.key);
+    if(x1-1 > 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
+        console.log('in a row left');
+    }
 }
