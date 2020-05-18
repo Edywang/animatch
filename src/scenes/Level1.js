@@ -13,14 +13,13 @@ class Level1 extends Phaser.Scene {
 
     }
     create() {
-        //Config
+        //Config (self explanatory names)
         toRemove = [];
         tileSelected1 = null;
         tileSelected2 = null;
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
-        //let possible = false;
         typeList = ['White','Red','Green','Blue'];
         //tileArray[height][length]
         tileArray = [
@@ -59,7 +58,6 @@ class Level1 extends Phaser.Scene {
             //If adjacent swap tiles
             checkAdjacent();
         }
-        //reorganize();
     }
     //If you select the tile
     selected(tempTile){
@@ -84,7 +82,14 @@ class Level1 extends Phaser.Scene {
         }
     }
 }
-//Check Adjacent Function
+//--------------------------
+//Global Functions
+//(Level functions that will be repetitivly used)
+//--------------------------
+//--------------------------
+//--------------------------
+
+//Check if adjacent tile is different type
 checkAdjacent=function(){
     //Check if adjacent
     if(((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
@@ -118,9 +123,9 @@ checkAdjacent=function(){
         tileSelected2 = null;
     }
 }
+//Check if tiles are in a row
 checkInARow=function(y1,x1){
-    //console.log('\ndown');
-    console.log(tileArray[y1][x1].texture.key);
+    //console.log(tileArray[y1][x1].texture.key);
     //Check Verticle
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
         toRemove.push([y1,x1]);
@@ -138,6 +143,7 @@ checkInARow=function(y1,x1){
         toRemove = [];
     }
 }
+//Helper function
 checkDown=function(y1,x1){
     if(y1+1 <= tileArray.length-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
         toRemove.push([y1+1,x1]);
@@ -145,6 +151,7 @@ checkDown=function(y1,x1){
     }
     return 0;
 }
+//Helper function
 checkUp=function(y1,x1){
     if(y1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
         toRemove.push([y1-1,x1]);
@@ -152,6 +159,7 @@ checkUp=function(y1,x1){
     }
     return 0;
 }
+//Helper function
 checkRight=function(y1,x1){
     if(x1+1 <= tileArray[y1].length-1&& (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
         toRemove.push([y1,x1+1]);
@@ -159,6 +167,7 @@ checkRight=function(y1,x1){
     }
     return 0;
 }
+//Helper function
 checkLeft=function(y1,x1){
     if(x1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
         toRemove.push([y1,x1-1]);
@@ -166,6 +175,7 @@ checkLeft=function(y1,x1){
     }
     return 0;
 }
+//Helper function
 removeTile=function(){
     var tempRemove;
     while(toRemove.length>0){
@@ -174,6 +184,7 @@ removeTile=function(){
     }
     reorganize();
 }
+//Reorganizes tiles so they fall down
 reorganize=function(){
     //Length
     for(var i = tileArray[0].length-1; i >= 0; i--){
@@ -198,8 +209,21 @@ reorganize=function(){
                     }
                 }
             }
-
-
+        }
+    }
+    newTile();
+}
+//Adds new tiles to the empty slots
+newTile=function(){
+    for(var i = tileArray[0].length-1; i >= 0; i--){
+        //Height
+        for(var j = tileArray.length-1; j >= 0; j--){
+            if(tileArray[j][i].alpha == 0){
+                                                                //TODO: Animate falling tile
+                var type = Phaser.Math.Between(0,typeList.length-1);
+                tileArray[j][i].setTexture(typeList[type]);
+                tileArray[j][i].alpha = 1;
+            }
         }
     }
 }
