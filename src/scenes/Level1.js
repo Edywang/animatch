@@ -192,8 +192,20 @@ reorganize=function(){
                     }
                 }
             }
-
-
+        }
+    }
+    newTile();
+}
+newTile=function(){
+    for(var i = tileArray[0].length-1; i >= 0; i--){
+        //Height
+        for(var j = tileArray.length-1; j >= 0; j--){
+            if(tileArray[j][i].alpha == 0){
+                                                                //TODO: Animate falling tile
+                var type = Phaser.Math.Between(0,typeList.length-1);
+                tileArray[j][i].setTexture(typeList[type]);
+                tileArray[j][i].alpha = 1;
+            }
         }
     }
 }
