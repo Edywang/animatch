@@ -8,6 +8,9 @@ class Level1 extends Phaser.Scene {
         this.load.image('Red',"assets/Red.png");
         this.load.image('Green',"assets/Green.png");
         this.load.image('Blue',"assets/Blue.png");
+        this.load.audio('bark', './assets/bark.wav');
+        this.load.audio('beep', './assets/beep.wav');
+
     }
     create() {
         //Config
@@ -67,6 +70,7 @@ class Level1 extends Phaser.Scene {
             tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
             //Make the selected tile slightly bigger
             tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
+            game.sound.play('beep');
         }
         //Selected a tile previously
         else{
@@ -121,6 +125,7 @@ checkInARow=function(y1,x1){
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
         toRemove.push([y1,x1]);
         removeTile();
+        game.sound.play('bark');
     } else {
         toRemove = [];
     }
@@ -128,6 +133,7 @@ checkInARow=function(y1,x1){
     if((checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
         toRemove.push([y1,x1]);
         removeTile();
+        game.sound.play('bark');
     } else {
         toRemove = [];
     }
