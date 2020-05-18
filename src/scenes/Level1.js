@@ -11,8 +11,9 @@ class Level1 extends Phaser.Scene {
     }
     create() {
         //Config
-        let tileSelected1 = null;
-        let tileSelected2 = null;
+        toRemove = [];
+        tileSelected1 = null;
+        tileSelected2 = null;
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
@@ -36,69 +37,163 @@ class Level1 extends Phaser.Scene {
         for(var i = 0; i < tileArray[0].length; i++){
             //Height
             for(var j = 0; j < tileArray.length; j++){
+                //Choose random tile
                 var type = Phaser.Math.Between(0,typeList.length-1);
                 var tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0); 
+                //Allow tile to be clickable
                 tempTile.setInteractive();
                 tempTile.on('clicked',this.selected,this);
                 tileArray[j][i] = tempTile;
             }
         }
-        this.input.on('gameobjectup', function (pointer, gameObject)
-        {
-        gameObject.emit('clicked', gameObject);
+        //Add clicked action
+        this.input.on('gameobjectup', function (pointer, gameObject){
+            gameObject.emit('clicked', gameObject);
         }, this);
     }
     update() {
         if(tileSelected2 != null){
             //If adjacent swap tiles
-            if((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
-                && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
-                || (tileSelected2[0] == tileSelected1[0] && tileSelected2[0] == tileSelected1[0]
-                && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1)){
-                //Temp the tiles
-                var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
-                var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
-                //Adjust the tiles
-                holdTile.x = spacing*tileSelected2[1] + offsetX;
-                holdTile.y = spacing*tileSelected2[0] + offsetY;
-                holdTile2.x = spacing*tileSelected1[1] + offsetX;
-                holdTile2.y = spacing*tileSelected1[0] + offsetY;
-                tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
-                tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
-                holdTile.setScale(1,1).setOrigin(0,0);
-                //Reset tiles selected
+            checkAdjacent();
+        }
+        //reorganize();
+    }
+    //If you select the tile
+    selected(tempTile){
+        //No previous selected tile
+        console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
+        if(tileSelected1 == null){
+            //Store the array values of the tile
+            tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
+            //Make the selected tile slightly bigger
+            tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
+        }
+        //Selected a tile previously
+        else{
+            //Store the array values of the tile
+            tileSelected2 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
+            if(tileSelected2[0] == tileSelected1[0] && tileSelected2[1] == tileSelected1[1]){
+                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1,1).setOrigin(0,0);
                 tileSelected1 = null;
                 tileSelected2 = null;
-                holdTile = null;
-                holdTile2 = null;
-                //console.log('swapped');
-            }
-            //Else reset 2nd tile
-            else{
-                tileSelected2 = null;
             }
         }
-        //Length
-        /*for(var i = 0; i < tileArray[0].length; i++){
-            //Height
-            for(var j = 0; j < tileArray.length; j++){
-                tileArray[j][i].update();
-                //console.log('updating');
-            }
-        }*/
     }
-    selected(tempTile){
-        if(tileSelected1 == null){
-            tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
-            tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
-            console.log(tileArray[tileSelected1[0]][tileSelected1[1]].texture.key);
+}
+//Check Adjacent Function
+checkAdjacent=function(){
+    //Check if adjacent
+    if(((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
+        && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
+        || (tileSelected2[0] == tileSelected1[0] && tileSelected2[0] == tileSelected1[0]
+        && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1))
+        && tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key){
+        //Temp the tiles
+        var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
+        var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
+        //Adjust the tiles
+        holdTile.y = spacing*tileSelected2[0] + offsetY;
+        holdTile.x = spacing*tileSelected2[1] + offsetX;
+        holdTile2.y = spacing*tileSelected1[0] + offsetY;
+        holdTile2.x = spacing*tileSelected1[1] + offsetX;
+        tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
+        tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
+        holdTile.setScale(1,1).setOrigin(0,0);
+        //Reset tiles selected
+        console.log(tileSelected2[0],tileSelected2[1]);
+        checkInARow(tileSelected2[0],tileSelected2[1]);
+        console.log(tileSelected1[0],tileSelected1[1]);
+        checkInARow(tileSelected1[0],tileSelected1[1]);
+        tileSelected1 = null;
+        tileSelected2 = null;
+        holdTile = null;
+        holdTile2 = null;
+    }
+    //Else reset 2nd tile
+    else{
+        tileSelected2 = null;
+    }
+}
+checkInARow=function(y1,x1){
+    //console.log('\ndown');
+    console.log(tileArray[y1][x1].texture.key);
+    //Check Verticle
+    if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
+        toRemove.push([y1,x1]);
+        removeTile();
+    } else {
+        toRemove = [];
+    }
+    //Check Horizontal
+    if((checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
+        toRemove.push([y1,x1]);
+        removeTile();
+    } else {
+        toRemove = [];
+    }
+}
+checkDown=function(y1,x1){
+    if(y1+1 <= tileArray.length-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
+        toRemove.push([y1+1,x1]);
+        return checkDown(y1+1,x1) + 1;
+    }
+    return 0;
+}
+checkUp=function(y1,x1){
+    if(y1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
+        toRemove.push([y1-1,x1]);
+        return checkUp(y1-1,x1) + 1;
+    }
+    return 0;
+}
+checkRight=function(y1,x1){
+    if(x1+1 <= tileArray[y1].length-1&& (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
+        toRemove.push([y1,x1+1]);
+        return checkRight(y1,x1+1) + 1;
+    }
+    return 0;
+}
+checkLeft=function(y1,x1){
+    if(x1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
+        toRemove.push([y1,x1-1]);
+        return checkLeft(y1,x1-1) + 1;
+    }
+    return 0;
+}
+removeTile=function(){
+    var tempRemove;
+    while(toRemove.length>0){
+        tempRemove = toRemove.pop()
+        tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
+    }
+    reorganize();
+}
+reorganize=function(){
+    //Length
+    for(var i = tileArray[0].length-1; i >= 0; i--){
+        //Height
+        for(var j = tileArray.length-1; j >= 1; j--){
+            if(tileArray[j][i].alpha == 0){
+                for(var k = j-1; k >= 0; k--){
+                    if(tileArray[k][i].alpha != 0){
+                                                                //TODO: Animate falling tile
+                        //Hold tiles
+                        var holdTile = tileArray[k][i];
+                        var holdTile2 = tileArray[j][i];
+                        //Adjust locations
+                        holdTile.y = spacing*j + offsetY;
+                        holdTile.x = spacing*i + offsetX;
+                        holdTile2.y = spacing*k + offsetY;
+                        holdTile2.x = spacing*i + offsetX;
+                        //Changes position in array
+                        tileArray[j][i] = holdTile;
+                        tileArray[k][i] = holdTile2;
+                        break; 
+                    }
+                }
+            }
 
-        }else{
-            tileSelected2 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
-            console.log(tileArray[tileSelected2[0]][tileSelected2[1]].texture.key);
 
         }
-        //console.log(tempTile.x);
-        //console.log(tempTile.y);
     }
 }
