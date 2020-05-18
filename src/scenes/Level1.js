@@ -10,7 +10,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('Blue',"assets/Blue.png");
     }
     create() {
-        //Config
+        //Config (self explanatory names)
         toRemove = [];
         tileSelected1 = null;
         tileSelected2 = null;
