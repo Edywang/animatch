@@ -11,6 +11,7 @@ class Level1 extends Phaser.Scene {
     }
     create() {
         //Config
+        toRemove = [];
         tileSelected1 = null;
         tileSelected2 = null;
         offsetX = 90;
@@ -99,6 +100,8 @@ checkAdjacent=function(){
         //Reset tiles selected
         console.log(tileSelected2[0],tileSelected2[1]);
         checkInARow(tileSelected2[0],tileSelected2[1]);
+        console.log(tileSelected1[0],tileSelected1[1]);
+        checkInARow(tileSelected1[0],tileSelected1[1]);
         tileSelected1 = null;
         tileSelected2 = null;
         holdTile = null;
@@ -110,28 +113,58 @@ checkAdjacent=function(){
     }
 }
 checkInARow=function(y1,x1){
-    console.log('\nup');
+    //console.log('\ndown');
     console.log(tileArray[y1][x1].texture.key);
-    console.log(tileArray[y1+1][x1].texture.key);
-    if(y1+1 < tileArray.size-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
-        console.log('in a row up');
+    var up,down,left,right;
+    //Check Verticle
+    if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
+        console.log("Test" + y1,x1);
+        toRemove.push([y1,x1]);
+        removeTile();
+    } else {
+        toRemove = [];
     }
-    console.log('\ndown');
-    console.log(tileArray[y1][x1].texture.key);
-    console.log(tileArray[y1-1][x1].texture.key);
-    if(y1-1 > 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
-        console.log('in a row down');
+    //Check Horizontal
+    if((checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
+        console.log("Test" + y1,x1);
+        toRemove.push([y1,x1]);
+        removeTile();
+    } else {
+        toRemove = [];
     }
-    console.log('\nright');
-    console.log(tileArray[y1][x1].texture.key);
-    console.log(tileArray[y1][x1+1].texture.key);
-    if(x1+1 < tileArray.size-1 && (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
-        console.log('in a row right');
+}
+checkDown=function(y1,x1){
+    if(y1+1 <= tileArray.length-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
+        toRemove.push([y1+1,x1]);
+        return checkDown(y1+1,x1) + 1;
     }
-    console.log('\nleft');
-    console.log(tileArray[y1][x1].texture.key);
-    console.log(tileArray[y1][x1-1].texture.key);
-    if(x1-1 > 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
-        console.log('in a row left');
+    return 0;
+}
+checkUp=function(y1,x1){
+    if(y1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
+        toRemove.push([y1-1,x1]);
+        return checkUp(y1-1,x1) + 1;
+    }
+    return 0;
+}
+checkRight=function(y1,x1){
+    if(x1+1 <= tileArray[y1].length-1&& (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
+        toRemove.push([y1,x1+1]);
+        return checkRight(y1,x1+1) + 1;
+    }
+    return 0;
+}
+checkLeft=function(y1,x1){
+    if(x1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
+        toRemove.push([y1,x1-1]);
+        return checkLeft(y1,x1-1) + 1;
+    }
+    return 0;
+}
+removeTile=function(){
+    var tempRemove;
+    while(toRemove.length>0){
+        tempRemove = toRemove.pop()
+        tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
     }
 }
