@@ -5,7 +5,7 @@ let config = {
     type: Phaser.CANVAS,
     width: 480, // TODO: We might want to change this
     height: 640, // TODO: We might want to change this
-    scene: [Menu,Level1],
+    scene: [Menu,Animation1,Level1],
 };
 let gameConfig = {
     tileSize: 100,
