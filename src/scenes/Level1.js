@@ -56,10 +56,12 @@ class Level1 extends Phaser.Scene {
             //If adjacent swap tiles
             checkAdjacent();
         }
+        //reorganize();
     }
     //If you select the tile
     selected(tempTile){
         //No previous selected tile
+        console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
         if(tileSelected1 == null){
             //Store the array values of the tile
             tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
@@ -90,10 +92,10 @@ checkAdjacent=function(){
         var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
         var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
         //Adjust the tiles
-        holdTile.x = spacing*tileSelected2[1] + offsetX;
         holdTile.y = spacing*tileSelected2[0] + offsetY;
-        holdTile2.x = spacing*tileSelected1[1] + offsetX;
+        holdTile.x = spacing*tileSelected2[1] + offsetX;
         holdTile2.y = spacing*tileSelected1[0] + offsetY;
+        holdTile2.x = spacing*tileSelected1[1] + offsetX;
         tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
         tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
         holdTile.setScale(1,1).setOrigin(0,0);
@@ -115,10 +117,8 @@ checkAdjacent=function(){
 checkInARow=function(y1,x1){
     //console.log('\ndown');
     console.log(tileArray[y1][x1].texture.key);
-    var up,down,left,right;
     //Check Verticle
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
-        console.log("Test" + y1,x1);
         toRemove.push([y1,x1]);
         removeTile();
     } else {
@@ -126,7 +126,6 @@ checkInARow=function(y1,x1){
     }
     //Check Horizontal
     if((checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
-        console.log("Test" + y1,x1);
         toRemove.push([y1,x1]);
         removeTile();
     } else {
@@ -166,5 +165,35 @@ removeTile=function(){
     while(toRemove.length>0){
         tempRemove = toRemove.pop()
         tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
+    }
+    reorganize();
+}
+reorganize=function(){
+    //Length
+    for(var i = tileArray[0].length-1; i >= 0; i--){
+        //Height
+        for(var j = tileArray.length-1; j >= 1; j--){
+            if(tileArray[j][i].alpha == 0){
+                for(var k = j-1; k >= 0; k--){
+                    if(tileArray[k][i].alpha != 0){
+                                                                //TODO: Animate falling tile
+                        //Hold tiles
+                        var holdTile = tileArray[k][i];
+                        var holdTile2 = tileArray[j][i];
+                        //Adjust locations
+                        holdTile.y = spacing*j + offsetY;
+                        holdTile.x = spacing*i + offsetX;
+                        holdTile2.y = spacing*k + offsetY;
+                        holdTile2.x = spacing*i + offsetX;
+                        //Changes position in array
+                        tileArray[j][i] = holdTile;
+                        tileArray[k][i] = holdTile2;
+                        break; 
+                    }
+                }
+            }
+
+
+        }
     }
 }
