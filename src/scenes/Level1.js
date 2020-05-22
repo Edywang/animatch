@@ -126,11 +126,20 @@ checkAdjacent=function(){
 //Check if tiles are in a row
 checkInARow=function(y1,x1){
     //console.log(tileArray[y1][x1].texture.key);
+    if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2 && (checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
+        toRemove.push([y1,x1]);
+        removeTile();
+        game.sound.play('bark');
+        //console.log("remove vertical1");
+    } else {
+        toRemove = [];
+    }
     //Check Verticle
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
         toRemove.push([y1,x1]);
         removeTile();
         game.sound.play('bark');
+        //console.log("remove vertical1");
     } else {
         toRemove = [];
     }
@@ -139,6 +148,7 @@ checkInARow=function(y1,x1){
         toRemove.push([y1,x1]);
         removeTile();
         game.sound.play('bark');
+       //console.log("remove horizontal1");
     } else {
         toRemove = [];
     }
