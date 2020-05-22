@@ -15,6 +15,7 @@ class Level1 extends Phaser.Scene {
     create() {
         //Config (self explanatory names)
         toRemove = [];
+        toRemoveTemp = []
         tileSelected1 = null;
         tileSelected2 = null;
         offsetX = 90;
@@ -98,29 +99,39 @@ checkAdjacent=function(){
             && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1))
             && tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key){
         //Stuff
+        //Temp the tiles
+        var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
+        var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
+        //Adjust the tiles
+        holdTile.y = spacing*tileSelected2[0] + offsetY;
+        holdTile.x = spacing*tileSelected2[1] + offsetX;
+        holdTile2.y = spacing*tileSelected1[0] + offsetY;
+        holdTile2.x = spacing*tileSelected1[1] + offsetX;
+        tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
+        tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
+        holdTile.setScale(1,1).setOrigin(0,0);
         console.log(tileSelected2[0],tileSelected2[1]);
         checkInARow(tileSelected2[0],tileSelected2[1]);
-        console.log(tileSelected1[0],tileSelected1[1]);
+        //console.log(tileSelected1[0],tileSelected1[1]);
         checkInARow(tileSelected1[0],tileSelected1[1]);
-        if(toRemove.length > 0){
-            //Temp the tiles
-            var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
-            var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
-            //Adjust the tiles
-            holdTile.y = spacing*tileSelected2[0] + offsetY;
-            holdTile.x = spacing*tileSelected2[1] + offsetX;
-            holdTile2.y = spacing*tileSelected1[0] + offsetY;
-            holdTile2.x = spacing*tileSelected1[1] + offsetX;
-            tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
-            tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
-            holdTile.setScale(1,1).setOrigin(0,0);
-            //Reset tiles selected
-            removeTile();
-            tileSelected1 = null;
-            tileSelected2 = null;
-            holdTile = null;
-        holdTile2 = null;
+        if(toRemove.length == 0){
+            holdTile2.y = spacing*tileSelected2[0] + offsetY;
+            holdTile2.x = spacing*tileSelected2[1] + offsetX;
+            holdTile.y = spacing*tileSelected1[0] + offsetY;
+            holdTile.x = spacing*tileSelected1[1] + offsetX;
+            tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile;
+            tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile2;
+            //holdTile2.setScale(1.1,1.1).setOrigin(0,0);
         }
+        for(var m=0;m<toRemove.length-1;m++){
+            console.log(toRemove[m]);
+        }
+        //Reset tiles selected
+        removeTile();
+        tileSelected1 = null;
+        tileSelected2 = null;
+        holdTile = null;
+        holdTile2 = null;
     }
     //Else reset 2nd tile
     else{
@@ -131,36 +142,55 @@ checkAdjacent=function(){
 checkInARow=function(y1,x1){
     //console.log(tileArray[y1][x1].texture.key);
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2 && (checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
-        toRemove.push([y1,x1]);
+        toRemoveTemp.push([y1,x1]);
+        //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
+        while(toRemoveTemp.length > 0){
+            var temp = toRemoveTemp.pop();
+            //console.log("Temp: " + temp);
+            toRemove.push(temp);
+        }
+        //console.log("remove verticle and horizontal");
         return;
-        //console.log("remove vertical1");
     } else {
-        toRemove = [];
+        toRemoveTemp = [];
     }
     //Check Verticle
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2){
-        toRemove.push([y1,x1]);
+        toRemoveTemp.push([y1,x1]);
+        //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
+        while(toRemoveTemp.length > 0){
+            var temp = toRemoveTemp.pop();
+            //console.log("Temp: " + temp);
+            toRemove.push(temp);
+        }
+        //console.log("remove vertical");
         return;
-        //console.log("remove vertical1");
     } else {
-        toRemove = [];
+        toRemoveTemp = [];
     }
     //Check Horizontal
     if((checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
-        toRemove.push([y1,x1]);
+        toRemoveTemp.push([y1,x1]);
+        //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
+        while(toRemoveTemp.length > 0){
+            var temp = toRemoveTemp.pop();
+            //console.log("Temp: " + temp);
+            toRemove.push(temp);
+        }   
+        //console.log("remove horizontal");
         return;
-       //console.log("remove horizontal1");
     } else {
-        toRemove = [];
+        toRemoveTemp = [];
     }
 }
 //Helper function
 checkDown=function(y1,x1){
     if(y1+1 <= tileArray.length-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
-        toRemove.push([y1+1,x1]);
+        //console.log("Push: " + [y1+1,x1]);
+        toRemoveTemp.push([y1+1,x1]);   
         return checkDown(y1+1,x1) + 1;
     }
     return 0;
@@ -168,7 +198,8 @@ checkDown=function(y1,x1){
 //Helper function
 checkUp=function(y1,x1){
     if(y1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
-        toRemove.push([y1-1,x1]);
+        //console.log("Push: " + [y1-1,x1]);
+        toRemoveTemp.push([y1-1,x1]);
         return checkUp(y1-1,x1) + 1;
     }
     return 0;
@@ -176,7 +207,8 @@ checkUp=function(y1,x1){
 //Helper function
 checkRight=function(y1,x1){
     if(x1+1 <= tileArray[y1].length-1&& (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
-        toRemove.push([y1,x1+1]);
+        //console.log("Push: " + [y1,x1+1]);
+        toRemoveTemp.push([y1,x1+1]);
         return checkRight(y1,x1+1) + 1;
     }
     return 0;
@@ -184,7 +216,8 @@ checkRight=function(y1,x1){
 //Helper function
 checkLeft=function(y1,x1){
     if(x1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
-        toRemove.push([y1,x1-1]);
+        //console.log("Push: " + [y1,x1-1]);
+        toRemoveTemp.push([y1,x1-1]);
         return checkLeft(y1,x1-1) + 1;
     }
     return 0;

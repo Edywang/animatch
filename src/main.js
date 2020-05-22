@@ -13,7 +13,7 @@ let gameConfig = {
 // Starting the Phaser game with the object config as a param
 let game = new Phaser.Game(config);
 //Game level lists
-let typeList, tileArray, toRemove;
+let typeList, tileArray, toRemove, toRemoveTemp;
 //Spacing for levels
 let offsetX, offsetY, spacing;
 //Tiles selected
