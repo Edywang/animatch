@@ -15,6 +15,6 @@ let game = new Phaser.Game(config);
 //Game level lists
 let typeList, tileArray, toRemove, toRemoveTemp;
 //Spacing for levels
-let offsetX, offsetY, spacing;
+let offsetX, offsetY, spacing, specialTiles;
 //Tiles selected
 let tileSelected1, tileSelected2;

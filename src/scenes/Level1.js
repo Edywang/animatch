@@ -8,6 +8,9 @@ class Level1 extends Phaser.Scene {
         this.load.image('Red',"assets/Red.png");
         this.load.image('Green',"assets/Green.png");
         this.load.image('Blue',"assets/Blue.png");
+        this.load.image('Purple',"assets/Purple.png");
+        this.load.image('Yellow',"assets/Yellow.png");
+        this.load.image('Player',"assets/Player.png");
         this.load.audio('bark', './assets/bark.wav');
         this.load.audio('beep', './assets/beep.wav');
 
@@ -21,7 +24,8 @@ class Level1 extends Phaser.Scene {
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
-        typeList = ['White','Red','Green','Blue'];
+        typeList = ['White','Red','Green','Blue','Purple','Yellow','Player'];
+        specialTiles = 1;
         //tileArray[height][length]
         tileArray = [
             [1,2,3,4,5,6],
@@ -31,17 +35,25 @@ class Level1 extends Phaser.Scene {
             [5,2,3,4,5,6],
             [6,2,3,4,5,6],
             [7,2,3,4,5,6],
-            [8,2,3,4,5,6],
+            [8,2,3,4,5,6],  
             [9,2,3,4,5,6],
             [10,2,3,4,5,6],
         ];
         //Initialize
         //Length
+        var playerTileX = Phaser.Math.Between(0,tileArray[0].length);
+        var playerTileY = Phaser.Math.Between(0,tileArray.length);
+        var type;
         for(var i = 0; i < tileArray[0].length; i++){
             //Height
             for(var j = 0; j < tileArray.length; j++){
                 //Choose random tile
-                var type = Phaser.Math.Between(0,typeList.length-1);
+                sleep(1000);
+                if(i == playerTileX && j == playerTileY){
+                    type = typeList.length-1;
+                }else{
+                    type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
+                }
                 var tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0); 
                 //Allow tile to be clickable
                 tempTile.setInteractive();
@@ -267,10 +279,13 @@ newTile=function(){
         for(var j = tileArray.length-1; j >= 0; j--){
             if(tileArray[j][i].alpha == 0){
                                                                 //TODO: Animate falling tile
-                var type = Phaser.Math.Between(0,typeList.length-1);
+                var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
                 tileArray[j][i].setTexture(typeList[type]);
                 tileArray[j][i].alpha = 1;
             }
         }
     }
+}
+sleep=function(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
