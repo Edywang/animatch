@@ -53,13 +53,16 @@ class Level1 extends Phaser.Scene {
                 }else{
                     type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
                 }
-                var tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0); 
+                var tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0);
                 //Allow tile to be clickable
                 tempTile.setInteractive();
                 tempTile.on('clicked',this.selected,this);
                 tileArray[j][i] = tempTile;
+                //Hide tile
+                tempTile.alpha = 0;
             }
         }
+        setVisible(tileArray.length-1,tileArray[0].length-1);
         //Add clicked action
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
@@ -100,7 +103,20 @@ class Level1 extends Phaser.Scene {
 //--------------------------
 //--------------------------
 //--------------------------
-
+//Set tiles to Visible
+setVisible=function(i,j){
+    setTimeout(function(){
+        if(i < 0 || j <0){
+            return;
+        }
+        if(j == 0){
+            setVisible(i-1,tileArray[0].length-1);
+        }else{
+            setVisible(i,j-1);
+        }
+        tileArray[i][j].alpha = 1;
+    },100);
+}
 //Check if adjacent tile is different type
 checkAdjacent=function(){
     //Check if adjacent
