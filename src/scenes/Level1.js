@@ -19,6 +19,8 @@ class Level1 extends Phaser.Scene {
         //Config (self explanatory names)
         toRemove = [];
         toRemoveTemp = []
+        toSwap = [];
+        toAdd = [];
         tileSelected1 = null;
         tileSelected2 = null;
         offsetX = 90;
@@ -115,7 +117,7 @@ setVisible=function(i,j){
             setVisible(i,j-1);
         }
         tileArray[i][j].alpha = 1;
-    },100);
+    },40);
 }
 //Check if adjacent tile is different type
 checkAdjacent=function(){
@@ -264,43 +266,68 @@ reorganize=function(){
     for(var i = tileArray[0].length-1; i >= 0; i--){
         //Height
         for(var j = tileArray.length-1; j >= 1; j--){
+            //If invisible
             if(tileArray[j][i].alpha == 0){
+                //Find nearest visible block
                 for(var k = j-1; k >= 0; k--){
                     if(tileArray[k][i].alpha != 0){
-                                                                //TODO: Animate falling tile
-                        //Hold tiles
-                        var holdTile = tileArray[k][i];
-                        var holdTile2 = tileArray[j][i];
-                        //Adjust locations
-                        holdTile.y = spacing*j + offsetY;
-                        holdTile.x = spacing*i + offsetX;
-                        holdTile2.y = spacing*k + offsetY;
-                        holdTile2.x = spacing*i + offsetX;
-                        //Changes position in array
-                        tileArray[j][i] = holdTile;
-                        tileArray[k][i] = holdTile2;
-                        break; 
+                        //Drop all blocks
+                        for(var x=k;x>=0;x--){
+                            toSwap.push([x,x+(j-k),i]);
+                        }
+                        break;
                     }
                 }
+                break; 
             }
         }
     }
-    newTile();
+    reorganize2();
+}
+//Recurision
+reorganize2=function(){
+    setTimeout(function(){
+        if(toSwap.length > 0){
+            var swapTemp = toSwap.shift();
+            var holdTile = tileArray[swapTemp[0]][swapTemp[2]];
+            var holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
+            //Adjust locations
+            holdTile.y = spacing*swapTemp[1] + offsetY;
+            holdTile.x = spacing*swapTemp[2] + offsetX;
+            holdTile2.y = spacing*swapTemp[0] + offsetY;
+            holdTile2.x = spacing*swapTemp[2] + offsetX;
+            //Changes position in array
+            tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
+            tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
+            reorganize2();
+        }else{
+            newTile();
+        }
+        return;
+    },100);
 }
 //Adds new tiles to the empty slots
 newTile=function(){
+    //Length
     for(var i = tileArray[0].length-1; i >= 0; i--){
         //Height
         for(var j = tileArray.length-1; j >= 0; j--){
             if(tileArray[j][i].alpha == 0){
-                                                                //TODO: Animate falling tile
-                var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-                tileArray[j][i].setTexture(typeList[type]);
-                tileArray[j][i].alpha = 1;
+                toAdd.push([j,i])
             }
         }
     }
+    newTile2();
 }
-sleep=function() {
-    //Do nothing
+newTile2=function(){
+    setTimeout(function(){
+        if(toAdd.length > 0){
+            var newTemp = toAdd.shift();
+            var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
+            tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
+            tileArray[newTemp[0]][newTemp[1]].alpha = 1;
+            newTile2();
+        }
+        return;
+    },100)
 }
