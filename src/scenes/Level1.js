@@ -41,14 +41,13 @@ class Level1 extends Phaser.Scene {
         ];
         //Initialize
         //Length
-        var playerTileX = Phaser.Math.Between(0,tileArray[0].length);
-        var playerTileY = Phaser.Math.Between(0,tileArray.length);
+        var playerTileX = Phaser.Math.Between(0,tileArray[0].length-1);
+        var playerTileY = Phaser.Math.Between(0,tileArray.length-1);
         var type;
         for(var i = 0; i < tileArray[0].length; i++){
             //Height
             for(var j = 0; j < tileArray.length; j++){
                 //Choose random tile
-                sleep(1000);
                 if(i == playerTileX && j == playerTileY){
                     type = typeList.length-1;
                 }else{
@@ -286,6 +285,6 @@ newTile=function(){
         }
     }
 }
-sleep=function(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+sleep=function() {
+    //Do nothing
 }
