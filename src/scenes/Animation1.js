@@ -100,8 +100,9 @@ class Animation1 extends Phaser.Scene {
         var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
         animation.on('animationcomplete', function (animation, frame){
             this.scene.start("level1");
-        //}, this);
+        }, this);
     }
-    update() { 
+    update() {
+        //
     }
 }
