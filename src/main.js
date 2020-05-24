@@ -18,3 +18,5 @@ let typeList, tileArray, toRemove, toRemoveTemp, toSwap, toAdd;
 let offsetX, offsetY, spacing, specialTiles;
 //Tiles selected
 let tileSelected1, tileSelected2;
+//roll player tile over to top
+let rollOver, playerPosX;
