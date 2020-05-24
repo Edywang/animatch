@@ -77,23 +77,7 @@ class Level1 extends Phaser.Scene {
             //If adjacent swap tiles
             checkAdjacent();
             
-        }
-        for(var i = 0; i< tileArray[0].length; i++){         
-           if(tileArray[tileArray.length-1][i].texture.key == 'Player')
-           {
-                tileArray[tileArray.length-1][i].alpha = 0;
-                rollOver = true;
-                playerPosX = i;
-                //tileArray[tileArray.length-1][i].setTexture('Black');
-                console.log("bottom reached");
-                //tileArray[0][i].setTexture('Player');
-                //tileArray[0][i].alpha = 1;
-                
-           }            
-        }
-        
-       
-            
+        }   
     }
     //If you select the tile
     selected(tempTile){
@@ -321,10 +305,24 @@ reorganize2=function(){
             tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
             reorganize2();
         }else{
-            newTile();
+            checkPlayer();
         }
         return;
     },100);
+}
+checkPlayer=function(){
+    for(var i = 0; i< tileArray[0].length; i++){         
+        if(tileArray[tileArray.length-1][i].texture.key == 'Player')
+        {
+             tileArray[tileArray.length-1][i].alpha = 0;
+             rollOver = true;
+             playerPosX = i  ;
+             console.log("bottom reached");
+             reorganize();
+             return;
+        } 
+     }
+     newTile();
 }
 //Adds new tiles to the empty slots
 newTile=function(){
@@ -344,20 +342,18 @@ newTile2=function(){
         if(toAdd.length > 0){
             var newTemp = toAdd.shift();
             var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-            if(tileArray[newTemp[0]][newTemp[1]].texture.key != 'Player')
-            {
+            //if(tileArray[newTemp[0]][newTemp[1]].texture.key != 'Player')
+            //{
+            if (rollOver == true && newTemp[1] == playerPosX){
+                tileArray[newTemp[0]][playerPosX].setTexture('Player');
+                tileArray[newTemp[0]][playerPosX].alpha = 1;
+                console.log("rolled over");
+                rollOver = false;
+            }else{
                 tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
                 tileArray[newTemp[0]][newTemp[1]].alpha = 1;
-                if (rollOver == true){
-            
-                    tileArray[0][playerPosX].setTexture('Player');
-                    tileArray[0][playerPosX].alpha = 1;
-                    console.log("rolled over");
-                    rollOver = false;
-            
-                    
-               }
             }
+            //}
             newTile2();
         }
         return;
