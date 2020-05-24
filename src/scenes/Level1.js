@@ -28,25 +28,25 @@ class Level1 extends Phaser.Scene {
         offsetY = 70;
         spacing = 50;
         rollOver = false;
-        typeList = ['White','Red','Green','Blue','Purple','Yellow','Player'];
+        typeList = ['White','Red','Green','Blue','Purple','Player'];
         specialTiles = 1;
         //tileArray[height][length]
         tileArray = [
-            [1,2,3,4,5,6],
-            [2,2,3,4,5,6],
-            [3,2,3,4,5,6],
-            [4,2,3,4,5,6],
-            [5,2,3,4,5,6],
-            [6,2,3,4,5,6],
-            [7,2,3,4,5,6],
-            [8,2,3,4,5,6],  
-            [9,2,3,4,5,6],
-            [10,2,3,4,5,6],
+            [1,2,3,4,5],
+            [2,2,3,4,5],
+            [3,2,3,4,5],
+            [4,2,3,4,5],
+            [5,2,3,4,5],
+            [6,2,3,4,5],
+            [7,2,3,4,5],
+            [8,2,3,4,5],  
+            [9,2,3,4,5],
+            [10,2,3,4,5],
         ];
         //Initialize
         //Length
         var playerTileX = Phaser.Math.Between(0,tileArray[0].length-1);
-        var playerTileY = Phaser.Math.Between(0,tileArray.length-1);
+        var playerTileY = Phaser.Math.Between(0,4);
         var type;
         for(var i = 0; i < tileArray[0].length; i++){
             //Height
@@ -157,7 +157,7 @@ checkAdjacent=function(){
         }
         for(var m=0;m<toRemove.length-1;m++){
             console.log(toRemove[m]);
-        }
+        }   
         //Reset tiles selected
         removeTile();
         tileSelected1 = null;
