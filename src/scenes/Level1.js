@@ -8,6 +8,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('Red',"assets/Red.png");
         this.load.image('Green',"assets/Green.png");
         this.load.image('Blue',"assets/Blue.png");
+        this.load.image('Black',"assets/Black.png");
         this.load.image('Purple',"assets/Purple.png");
         this.load.image('Yellow',"assets/Yellow.png");
         this.load.image('Player',"assets/Player.png");
@@ -26,6 +27,7 @@ class Level1 extends Phaser.Scene {
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
+        rollOver = false;
         typeList = ['White','Red','Green','Blue','Purple','Yellow','Player'];
         specialTiles = 1;
         //tileArray[height][length]
@@ -74,7 +76,24 @@ class Level1 extends Phaser.Scene {
         if(tileSelected2 != null){
             //If adjacent swap tiles
             checkAdjacent();
+            
         }
+        for(var i = 0; i< tileArray[0].length; i++){         
+           if(tileArray[tileArray.length-1][i].texture.key == 'Player')
+           {
+                tileArray[tileArray.length-1][i].alpha = 0;
+                rollOver = true;
+                playerPosX = i;
+                //tileArray[tileArray.length-1][i].setTexture('Black');
+                console.log("bottom reached");
+                //tileArray[0][i].setTexture('Player');
+                //tileArray[0][i].alpha = 1;
+                
+           }            
+        }
+        
+       
+            
     }
     //If you select the tile
     selected(tempTile){
@@ -161,6 +180,7 @@ checkAdjacent=function(){
         tileSelected2 = null;
         holdTile = null;
         holdTile2 = null;
+        
     }
     //Else reset 2nd tile
     else{
@@ -274,7 +294,7 @@ reorganize=function(){
                         //Drop all blocks
                         for(var x=k;x>=0;x--){
                             toSwap.push([x,x+(j-k),i]);
-                        }
+                        }                        
                         break;
                     }
                 }
@@ -284,7 +304,7 @@ reorganize=function(){
     }
     reorganize2();
 }
-//Recurision
+//Recursion
 reorganize2=function(){
     setTimeout(function(){
         if(toSwap.length > 0){
@@ -316,7 +336,7 @@ newTile=function(){
                 toAdd.push([j,i])
             }
         }
-    }
+    }   
     newTile2();
 }
 newTile2=function(){
@@ -324,8 +344,20 @@ newTile2=function(){
         if(toAdd.length > 0){
             var newTemp = toAdd.shift();
             var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-            tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
-            tileArray[newTemp[0]][newTemp[1]].alpha = 1;
+            if(tileArray[newTemp[0]][newTemp[1]].texture.key != 'Player')
+            {
+                tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
+                tileArray[newTemp[0]][newTemp[1]].alpha = 1;
+                if (rollOver == true){
+            
+                    tileArray[0][playerPosX].setTexture('Player');
+                    tileArray[0][playerPosX].alpha = 1;
+                    console.log("rolled over");
+                    rollOver = false;
+            
+                    
+               }
+            }
             newTile2();
         }
         return;
