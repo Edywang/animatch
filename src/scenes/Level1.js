@@ -14,6 +14,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('Player',"assets/Player.png");
         this.load.audio('bark', './assets/bark.wav');
         this.load.audio('beep', './assets/beep.wav');
+        this.load.image('mom', './assets/mom.png');
 
     }
     create() {
@@ -27,6 +28,7 @@ class Level1 extends Phaser.Scene {
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
+        moves = 30; //extremely tentative
         rollOver = false;
         typeList = ['White','Red','Green','Blue','Purple','Player'];
         specialTiles = 1;
@@ -43,10 +45,28 @@ class Level1 extends Phaser.Scene {
             [9,2,3,4,5],
             [10,2,3,4,5],
         ];
+        //settings tentative
+        let movesConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.movesLeft = this.add.text(80, 30, moves, movesConfig);
+
+        //place mom
+        this.add.sprite(335, 325, 'mom').setOrigin(0,0);
+
         //Initialize
         //Length
-        var playerTileX = Phaser.Math.Between(0,tileArray[0].length-1);
-        var playerTileY = Phaser.Math.Between(0,4);
+        var playerTileX =  0;//Phaser.Math.Between(0,tileArray[0].length-1);
+        var playerTileY =  0;//Phaser.Math.Between(0,4);
         var type;
         for(var i = 0; i < tileArray[0].length; i++){
             //Height
@@ -76,8 +96,20 @@ class Level1 extends Phaser.Scene {
         if(tileSelected2 != null){
             //If adjacent swap tiles
             checkAdjacent();
+            moves -= 1;
+            this.movesLeft.text = moves;
             
+        }
+        if(tileArray[5][4].texture.key == 'Player')
+        {
+            console.log("success");
+            this.scene.start("animation1Scene");
         }   
+        if(moves == 0)
+        {
+            console.log('game over');
+            //move to game over screen
+        }
     }
     //If you select the tile
     selected(tempTile){

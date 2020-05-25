@@ -20,3 +20,5 @@ let offsetX, offsetY, spacing, specialTiles;
 let tileSelected1, tileSelected2;
 //roll player tile over to top
 let rollOver, playerPosX;
+//moves remaining
+let moves;
