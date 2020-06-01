@@ -28,7 +28,7 @@ class Level1 extends Phaser.Scene {
         offsetX = 90;
         offsetY = 70;
         spacing = 50;
-        moves = 30; //extremely tentative
+        moves = 0; //extremely tentative
         rollOver = false;
         typeList = ['White','Red','Green','Blue','Purple','Player'];
         specialTiles = 1;
@@ -58,7 +58,7 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.movesLeft = this.add.text(80, 30, moves, movesConfig);
+        movesLeft = this.add.text(80, 30, moves, movesConfig);
 
         //place mom
         this.add.sprite(335, 325, 'mom').setOrigin(0,0);
@@ -96,8 +96,6 @@ class Level1 extends Phaser.Scene {
         if(tileSelected2 != null){
             //If adjacent swap tiles
             checkAdjacent();
-            moves -= 1;
-            this.movesLeft.text = moves;
             
         }
         if(tileArray[5][4].texture.key == 'Player')
@@ -105,11 +103,6 @@ class Level1 extends Phaser.Scene {
             console.log("success");
             this.scene.start("animation1Scene");
         }   
-        if(moves == 0)
-        {
-            console.log('game over');
-            //move to game over screen
-        }
     }
     //If you select the tile
     selected(tempTile){
@@ -216,6 +209,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }
         //console.log("remove verticle and horizontal");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
@@ -231,6 +226,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }
         //console.log("remove vertical");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
@@ -246,6 +243,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }   
         //console.log("remove horizontal");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
