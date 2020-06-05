@@ -3,14 +3,6 @@ class Animation1 extends Phaser.Scene {
         super("animation1Scene");
     }
     preload() {
-        //--------------------------
-        //WARNING
-        //THIS IS INCOMPLETE
-        //--------------------------
-        //--------------------------
-        //--------------------------
-        
-        //this.load.image('dog','./assets/dogPickup.gif');
         //320x240 Animation
         this.load.image('frame0','./assets/pickupDog/frame_00_delay-0.1s.gif');
         this.load.image('frame1','./assets/pickupDog/frame_01_delay-0.1s.gif');
