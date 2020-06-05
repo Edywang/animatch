@@ -60,7 +60,9 @@ class Level1 extends Phaser.Scene {
         this.instructions2 = this.add.text(10, 50, "Try to move the dog to the mother.", instructionConfig);
 
         //place mom
-        this.add.sprite(355, 355, 'mom').setOrigin(0,0);
+        var momSprite = this.add.sprite(355, 355, 'mom').setOrigin(0,0);
+        momSprite.setInteractive();
+        momSprite.on('clicked',function(){this.scene.start("animation2Scene");},this);
 
         //Initialize
         //Length

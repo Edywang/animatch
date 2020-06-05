@@ -3,14 +3,6 @@ class Animation1 extends Phaser.Scene {
         super("animation1Scene");
     }
     preload() {
-        //--------------------------
-        //WARNING
-        //THIS IS INCOMPLETE
-        //--------------------------
-        //--------------------------
-        //--------------------------
-        
-        //this.load.image('dog','./assets/dogPickup.gif');
         //320x240 Animation
         this.load.image('frame0','./assets/pickupDog/frame_00_delay-0.1s.gif');
         this.load.image('frame1','./assets/pickupDog/frame_01_delay-0.1s.gif');
@@ -97,10 +89,10 @@ class Animation1 extends Phaser.Scene {
             frameRate: 10,
             repeat: 0
         });
-        /*var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
-        animation.on('animationcomplete', function (animation, frame){*/
+        var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
+        animation.on('animationcomplete', function (animation, frame){
             this.scene.start("level1"); //should lead to level 2 when that is made
-        //}, this);
+        }, this);
     }
     update() {
         //

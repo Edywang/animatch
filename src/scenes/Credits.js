@@ -8,18 +8,22 @@ class Credits extends Phaser.Scene {
     }
     
     create(){
-        //Start Button
-        var button = this.add.sprite(95,200,`start`).setScale(0.5,0.5).setOrigin(0,0).setInteractive();
-        //Mouse Hover Button
-        button.on('pointerover',function(){});
-        //Mouse Leaves Button
-        button.on('pointerout',function(){});
-        //Mouse Clicks Button
-        button.on('pointerup',function(){
-            this.scene.start("animation2Scene");
-        },this);
+        let creditsConfig = {
+            fontFamily: 'Courier',
+            fontSize: '40px',
+            color: '#FFFFFF',
+            align: 'Left',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+        }
+        this.instructions1 = this.add.text(50, 120, "Animations:\nEdwin Wang", creditsConfig);
+        this.instructions2 = this.add.text(50, 260, "Tile Sprites:\nVincent", creditsConfig);
+        this.instructions2 = this.add.text(50, 400, "Programmer:\nEric Shen", creditsConfig);
     }
 
     update() { 
-    }
+        //
+    }   
 }
