@@ -55,9 +55,9 @@ class Level1 extends Phaser.Scene {
                 bottom: 5,
             },
         }
-        this.instructions1 = this.add.text(10, 10, "Click a tile to select it.", instructionConfig);
-        this.instructions2 = this.add.text(10, 30, "Click another tile to swap.", instructionConfig);
-        this.instructions2 = this.add.text(10, 50, "Try to move the dog to the mother.", instructionConfig);
+        this.instructions1 = this.add.text(20, 10, "Click a tile to select it.", instructionConfig);
+        this.instructions2 = this.add.text(20, 30, "Click another tile to swap.", instructionConfig);
+        this.instructions2 = this.add.text(20, 50, "Try to move the dog to the mother.", instructionConfig);
 
         //place mom
         var momSprite = this.add.sprite(355, 355, 'mom').setOrigin(0,0);
