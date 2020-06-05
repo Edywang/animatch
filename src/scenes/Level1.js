@@ -157,7 +157,7 @@ checkAdjacent=function(){
             && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
             || (tileSelected2[0] == tileSelected1[0] && tileSelected2[0] == tileSelected1[0]
             && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1))
-            && tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key){
+            /*&& tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key*/){
         //Stuff
         //Temp the tiles
         var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
