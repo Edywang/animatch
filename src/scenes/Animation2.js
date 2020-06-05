@@ -2,14 +2,7 @@ class Animation2 extends Phaser.Scene {
     constructor(){
         super("animation2Scene");
     }
-    preload() {
-        //--------------------------
-        //WARNING
-        //THIS IS INCOMPLETE
-        //--------------------------
-        //--------------------------
-        //--------------------------
-        
+    preload() {      
         //750x750 Animation
         this.load.image('playFrame0','./assets/playDog/frame_00_delay-0.08s.gif');
         this.load.image('playFrame1','./assets/playDog/frame_01_delay-0.08s.gif');

@@ -19,7 +19,7 @@ class Credits extends Phaser.Scene {
             },
         }
         this.instructions1 = this.add.text(50, 120, "Animations:\nEdwin Wang", creditsConfig);
-        this.instructions2 = this.add.text(50, 260, "Tile Sprites:\nVincent", creditsConfig);
+        this.instructions2 = this.add.text(50, 260, "Tile Sprites:\nVincent Cheng", creditsConfig);
         this.instructions2 = this.add.text(50, 400, "Programmer:\nEric Shen", creditsConfig);
     }
 

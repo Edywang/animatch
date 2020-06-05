@@ -44,7 +44,7 @@ class Level1 extends Phaser.Scene {
             [9,2,3,4,5,6],
             [10,2,3,4,5,6],
         ];
-        //settings tentative
+        //Instructions
         let instructionConfig = {
             fontFamily: 'Courier',
             fontSize: '20px',
@@ -61,6 +61,7 @@ class Level1 extends Phaser.Scene {
 
         //place mom
         var momSprite = this.add.sprite(355, 355, 'mom').setOrigin(0,0);
+        //Skip button
         momSprite.setInteractive();
         momSprite.on('clicked',function(){this.scene.start("animation2Scene");},this);
 
