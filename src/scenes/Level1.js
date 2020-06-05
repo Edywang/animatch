@@ -59,7 +59,7 @@ class Level1 extends Phaser.Scene {
         this.instructions2 = this.add.text(20, 30, "Click another tile to swap.", instructionConfig);
         this.instructions2 = this.add.text(20, 50, "Try to move the dog to the mother.", instructionConfig);
         //place mom
-        var momSprite = this.add.sprite(355, 355, 'mom').setOrigin(0,0);
+        var momSprite = this.add.sprite(355, 350 , 'mom').setOrigin(0,0).setScale(0.4,0.4);
         //Skip button
         momSprite.setInteractive();
         momSprite.on('clicked',function(){this.scene.start("animation2Scene");},this);
