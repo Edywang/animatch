@@ -97,10 +97,10 @@ class Animation1 extends Phaser.Scene {
             frameRate: 10,
             repeat: 0
         });
-        var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
-        animation.on('animationcomplete', function (animation, frame){
+        /*var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
+        animation.on('animationcomplete', function (animation, frame){*/
             this.scene.start("level1"); //should lead to level 2 when that is made
-        }, this);
+        //}, this);
     }
     update() {
         //

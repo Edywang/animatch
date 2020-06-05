@@ -25,43 +25,42 @@ class Level1 extends Phaser.Scene {
         toAdd = [];
         tileSelected1 = null;
         tileSelected2 = null;
-        offsetX = 90;
-        offsetY = 70;
+        offsetX = 60;
+        offsetY = 100;
         spacing = 50;
-        moves = 30; //extremely tentative
         rollOver = false;
         typeList = ['White','Red','Green','Blue','Purple','Player'];
         specialTiles = 1;
         //tileArray[height][length]
         tileArray = [
-            [1,2,3,4,5],
-            [2,2,3,4,5],
-            [3,2,3,4,5],
-            [4,2,3,4,5],
-            [5,2,3,4,5],
-            [6,2,3,4,5],
-            [7,2,3,4,5],
-            [8,2,3,4,5],  
-            [9,2,3,4,5],
-            [10,2,3,4,5],
+            [1,2,3,4,5,6],
+            [2,2,3,4,5,6],
+            [3,2,3,4,5,6],
+            [4,2,3,4,5,6],
+            [5,2,3,4,5,6],
+            [6,2,3,4,5,6],
+            [7,2,3,4,5,6],
+            [8,2,3,4,5,6],  
+            [9,2,3,4,5,6],
+            [10,2,3,4,5,6],
         ];
         //settings tentative
-        let movesConfig = {
+        let instructionConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
+            fontSize: '20px',
+            color: '#FFFFFF',
+            align: 'Left',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 100
         }
-        this.movesLeft = this.add.text(80, 30, moves, movesConfig);
+        this.instructions1 = this.add.text(10, 10, "Click a tile to select it.", instructionConfig);
+        this.instructions2 = this.add.text(10, 30, "Click another tile to swap.", instructionConfig);
+        this.instructions2 = this.add.text(10, 50, "Try to move the dog to the mother.", instructionConfig);
 
         //place mom
-        this.add.sprite(335, 325, 'mom').setOrigin(0,0);
+        this.add.sprite(355, 355, 'mom').setOrigin(0,0);
 
         //Initialize
         //Length
@@ -91,25 +90,19 @@ class Level1 extends Phaser.Scene {
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
         }, this);
+        
     }
     update() {
         if(tileSelected2 != null){
             //If adjacent swap tiles
             checkAdjacent();
-            moves -= 1;
-            this.movesLeft.text = moves;
             
         }
-        if(tileArray[5][4].texture.key == 'Player')
+        if(tileArray[5][tileArray[0].length-1].texture.key == 'Player')
         {
             console.log("success");
             this.scene.start("animation1Scene");
         }   
-        if(moves == 0)
-        {
-            console.log('game over');
-            //move to game over screen
-        }
     }
     //If you select the tile
     selected(tempTile){
@@ -374,8 +367,7 @@ newTile2=function(){
         if(toAdd.length > 0){
             var newTemp = toAdd.shift();
             var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-            //if(tileArray[newTemp[0]][newTemp[1]].texture.key != 'Player')
-            //{
+            //If player is at the bottom
             if (rollOver == true && newTemp[1] == playerPosX){
                 tileArray[newTemp[0]][playerPosX].setTexture('Player');
                 tileArray[newTemp[0]][playerPosX].alpha = 1;
@@ -385,9 +377,18 @@ newTile2=function(){
                 tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
                 tileArray[newTemp[0]][newTemp[1]].alpha = 1;
             }
-            //}
             newTile2();
         }
         return;
     },100)
 }
+/*checkAllTiles=function(){
+    //Length
+    for(var i = tileArray[0].length-1; i >= 0; i--){
+        //Height
+        for(var j = tileArray.length-1; j >= 0; j--){
+            checkInARow(i,j);
+        }
+    }
+    removeTile();
+}*/
