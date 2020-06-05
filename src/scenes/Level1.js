@@ -58,7 +58,6 @@ class Level1 extends Phaser.Scene {
         this.instructions1 = this.add.text(20, 10, "Click a tile to select it.", instructionConfig);
         this.instructions2 = this.add.text(20, 30, "Click another tile to swap.", instructionConfig);
         this.instructions2 = this.add.text(20, 50, "Try to move the dog to the mother.", instructionConfig);
-
         //place mom
         var momSprite = this.add.sprite(355, 355, 'mom').setOrigin(0,0);
         //Skip button
@@ -212,6 +211,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }
         //console.log("remove verticle and horizontal");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
@@ -227,6 +228,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }
         //console.log("remove vertical");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
@@ -242,6 +245,8 @@ checkInARow=function(y1,x1){
             toRemove.push(temp);
         }   
         //console.log("remove horizontal");
+        moves++;
+        movesLeft.text = moves;
         return;
     } else {
         toRemoveTemp = [];
