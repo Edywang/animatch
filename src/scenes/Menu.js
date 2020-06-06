@@ -15,7 +15,7 @@ class Menu extends Phaser.Scene {
         startText.on('pointerup', function () {
             this.scene.start("animation1Scene");
         },this);
-        this.add.sprite(160,400, 'doggoBigFi').setOrigin(0,0);
+        this.add.sprite(160,400, 'doggoBig').setOrigin(0,0);
     }
     update() { 
     }
