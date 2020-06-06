@@ -26,6 +26,7 @@ class Level1 extends Phaser.Scene {
         offsetY = 100;
         spacing = 50;
         rollOver = false;
+        canSelect = true;
         typeList = ['teddybear','frisbee','tennisball','chewtoy','ropetoy','doggo'];
         specialTiles = 1;
         //tileArray[height][length]
@@ -98,7 +99,7 @@ class Level1 extends Phaser.Scene {
             checkAdjacent();
             
         }
-        if(tileArray[5][tileArray[0].length-1].texture.key == 'Player')
+        if(tileArray[5][tileArray[0].length-1].texture.key == 'doggo')
         {
             console.log("success");
             this.scene.start("animation2Scene");
@@ -106,23 +107,25 @@ class Level1 extends Phaser.Scene {
     }
     //If you select the tile
     selected(tempTile){
-        //No previous selected tile
-        console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
-        if(tileSelected1 == null){
-            //Store the array values of the tile
-            tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
-            //Make the selected tile slightly bigger
-            tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
-            game.sound.play('beep');
-        }
-        //Selected a tile previously
-        else{
-            //Store the array values of the tile
-            tileSelected2 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
-            if(tileSelected2[0] == tileSelected1[0] && tileSelected2[1] == tileSelected1[1]){
-                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1,1).setOrigin(0,0);
-                tileSelected1 = null;
-                tileSelected2 = null;
+        if(canSelect){
+            //No previous selected tile
+            console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
+            if(tileSelected1 == null){
+                //Store the array values of the tile
+                tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
+                //Make the selected tile slightly bigger
+                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
+                game.sound.play('beep');
+            }
+            //Selected a tile previously
+            else{
+                //Store the array values of the tile
+                tileSelected2 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
+                if(tileSelected2[0] == tileSelected1[0] && tileSelected2[1] == tileSelected1[1]){
+                    tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1,1).setOrigin(0,0);
+                    tileSelected1 = null;
+                    tileSelected2 = null;
+                }
             }
         }
     }
@@ -149,6 +152,7 @@ setVisible=function(i,j){
 }
 //Check if adjacent tile is different type
 checkAdjacent=function(){
+    canSelect = false;
     //Check if adjacent
     if(((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
             && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
@@ -337,7 +341,7 @@ reorganize2=function(){
 }
 checkPlayer=function(){
     for(var i = 0; i< tileArray[0].length; i++){         
-        if(tileArray[tileArray.length-1][i].texture.key == 'Player')
+        if(tileArray[tileArray.length-1][i].texture.key == 'doggo')
         {
              tileArray[tileArray.length-1][i].alpha = 0;
              rollOver = true;
@@ -369,7 +373,7 @@ newTile2=function(){
             var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
             //If player is at the bottom
             if (rollOver == true && newTemp[1] == playerPosX){
-                tileArray[newTemp[0]][playerPosX].setTexture('Player');
+                tileArray[newTemp[0]][playerPosX].setTexture('doggo');
                 tileArray[newTemp[0]][playerPosX].alpha = 1;
                 console.log("rolled over");
                 rollOver = false;
@@ -378,6 +382,8 @@ newTile2=function(){
                 tileArray[newTemp[0]][newTemp[1]].alpha = 1;
             }
             newTile2();
+        }else{
+            canSelect = true;
         }
         return;
     },100)
