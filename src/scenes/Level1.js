@@ -197,6 +197,7 @@ checkAdjacent=function(){
     }
     //Else reset 2nd tile
     else{
+        canSelect=true;
         tileSelected2 = null;
     }
 }
