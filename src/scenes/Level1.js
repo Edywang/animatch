@@ -325,11 +325,7 @@ function reorganize(){
                         break;
                     }else{
                         let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-                        if (rollOver == true && i == playerPosX){
-                            tileArray[k][i].setTexture('doggo');
-                            console.log("rolled over");
-                            rollOver = false;
-                        }else{
+                        if (tileArray[k][i].texture.key!='doggo'){
                             tileArray[k][i].setTexture(typeList[type]);
                             console.log("changed type");
                         }
@@ -368,8 +364,6 @@ function checkPlayer(){
         if(tileArray[tileArray.length-1][i].texture.key == 'doggo')
         {
             tileArray[tileArray.length-1][i].alpha = 0;
-            rollOver = true;
-            playerPosX = i  ;
             console.log("bottom reached");
             return true;
         } 
@@ -383,6 +377,7 @@ async function updateDisplay(y, x, delay) {
     } else {
         for(let col = 0;col <= x;col++){
             if(tileArray[y][col].alpha == 0){
+                await sleep(delay);
                 tileArray[y][col].alpha = 1;
             }
             tileArray[y][col].y = spacing*y + offsetY;
