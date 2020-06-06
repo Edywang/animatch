@@ -3,15 +3,12 @@ class Level1 extends Phaser.Scene {
         super("level1");
     }
     preload() {
-        //this.load.image('Black',"assets/Black.png");
-        this.load.image('White',"assets/White.png");
-        this.load.image('Red',"assets/Red.png");
-        this.load.image('Green',"assets/Green.png");
-        this.load.image('Blue',"assets/Blue.png");
-        this.load.image('Black',"assets/Black.png");
-        this.load.image('Purple',"assets/Purple.png");
-        this.load.image('Yellow',"assets/Yellow.png");
-        this.load.image('Player',"assets/Player.png");
+        this.load.image('teddybear',"assets/rsz_teddybear.png");
+        this.load.image('frisbee',"assets/rsz_frisbee.png");
+        this.load.image('tennisball',"assets/rsz_tennisball.png");
+        this.load.image('chewtoy',"assets/rsz_chewtoy.png");
+        this.load.image('ropetoy',"assets/rsz_ropetoy.png");
+        this.load.image('doggo',"assets/rsz_doggo.png");
         this.load.audio('bark', './assets/bark.wav');
         this.load.audio('beep', './assets/beep.wav');
         this.load.image('mom', './assets/momSprite.png');
@@ -29,7 +26,7 @@ class Level1 extends Phaser.Scene {
         offsetY = 100;
         spacing = 50;
         rollOver = false;
-        typeList = ['White','Red','Green','Blue','Purple','Player'];
+        typeList = ['teddybear','frisbee','tennisball','chewtoy','ropetoy','doggo'];
         specialTiles = 1;
         //tileArray[height][length]
         tileArray = [
