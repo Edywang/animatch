@@ -5,7 +5,7 @@ class Menu extends Phaser.Scene {
     preload() {
         //580 x 220 Start Button
         this.load.image('start','./assets/Start.png');
-        this.load.image('doggo',"assets/rsz_doggo.png");
+        this.load.image('doggo',"assets/doggo.png");
         this.load.bitmapFont('myfont', 'assets/font.png', 'assets/font.fnt');
     }
     
@@ -15,7 +15,7 @@ class Menu extends Phaser.Scene {
         startText.on('pointerup', function () {
             this.scene.start("animation1Scene");
         },this);
-        this.add.sprite(190,400, 'doggo').setOrigin(0,0).setScale(2,2);
+        this.add.sprite(160,400, 'doggo').setOrigin(0,0);
     }
     update() { 
     }
