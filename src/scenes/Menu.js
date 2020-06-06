@@ -5,21 +5,18 @@ class Menu extends Phaser.Scene {
     preload() {
         //580 x 220 Start Button
         this.load.image('start','./assets/Start.png');
+        this.load.image('doggo',"assets/rsz_doggo.png");
+        this.load.bitmapFont('myfont', 'assets/font.png', 'assets/font.fnt');
     }
     
     create(){
-        //Start Button
-        var button = this.add.sprite(95,200,`start`).setScale(0.5,0.5).setOrigin(0,0).setInteractive();
-        //Mouse Hover Button
-        button.on('pointerover',function(){});
-        //Mouse Leaves Button
-        button.on('pointerout',function(){});
-        //Mouse Clicks Button
-        button.on('pointerup',function(){
+        var titleText = this.add.bitmapText(40, 50, 'myfont', 'Animatch', 128); 
+        var startText = this.add.bitmapText(180, 250, 'myfont', 'Start', 64).setOrigin(0,0).setInteractive(); 
+        startText.on('pointerup', function () {
             this.scene.start("animation1Scene");
         },this);
+        this.add.sprite(190,400, 'doggo').setOrigin(0,0).setScale(2,2);
     }
-
     update() { 
     }
 }

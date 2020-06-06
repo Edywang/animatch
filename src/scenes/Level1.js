@@ -12,7 +12,6 @@ class Level1 extends Phaser.Scene {
         this.load.audio('bark', './assets/bark.wav');
         this.load.audio('beep', './assets/beep.wav');
         this.load.image('mom', './assets/momSprite.png');
-
     }
     create() {
         //Config (self explanatory names)
