@@ -45,7 +45,7 @@ class Animation1 extends Phaser.Scene {
     }
     
     create(){
-        /*this.anims.create({
+        this.anims.create({
             key: 'dogPickup',
             frames: [
                 { key: 'frame0' },
@@ -90,9 +90,9 @@ class Animation1 extends Phaser.Scene {
             repeat: 0
         });
         var animation = this.add.sprite(80, 200, 'frame0').play('dogPickup').setOrigin(0,0);
-        animation.on('animationcomplete', function (animation, frame){*/
+        animation.on('animationcomplete', function (animation, frame){
             this.scene.start("level1"); //should lead to level 2 when that is made
-        //}, this);
+        }, this);
     }
     update() {
         //
