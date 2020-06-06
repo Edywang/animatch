@@ -65,7 +65,7 @@ class Level1 extends Phaser.Scene {
         //Initialize
         //Length
         let playerTileX =  0;//Phaser.Math.Between(0,tileArray[0].length-1);
-        let playerTileY =  0;//Phaser.Math.Between(0,4);
+        let playerTileY =  8;//Phaser.Math.Between(0,4);
         let type;
         for(let i = 0; i < tileArray[0].length; i++){
             //Height
@@ -75,7 +75,7 @@ class Level1 extends Phaser.Scene {
                     type = typeList.length-1;
                 }else{
                     if(j == 9 && (i == 0 || i == 1 || i == 2)){
-                        type = 'frisbee';
+                        type = 1;
                     }else{
                         type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
                     }
@@ -140,27 +140,27 @@ class Level1 extends Phaser.Scene {
 //--------------------------
 //--------------------------
 //Set tiles to Visible
-setVisible = function(y, x, delay) {
-    setTimeout(function(){
-        if (y < 0) {
-            return;
-        } else {
-            for(let col = 0;col <= x;col++){
-                tileArray[y][col].alpha = 1;
-            }
-            setVisible(y-1,tileArray[0].length-1, delay);
+async function setVisible(y, x, delay) {
+    for (let row = y; row >= 0; row--) {
+        for (let col = 0; col <= x; col++) {
+            tileArray[row][col].alpha = 1;
         }
-    },delay);
+        await sleep(delay);
+    }
+    // await sleep(delay);
+    // if (y < 0) {
+    //     return;
+    // } else {
+    //     for(let col = 0;col <= x;col++){
+    //         tileArray[y][col].alpha = 1;
+    //     }
+    //     setVisible(y-1,tileArray[0].length-1, delay);
 }
 //Check if adjacent tile is different type
-checkAdjacent=function(){
+function checkAdjacent(){
     canSelect = false;
     //Check if adjacent
-    if(((tileSelected2[0] <= tileSelected1[0]+1 && tileSelected2[0] >= tileSelected1[0]-1
-            && tileSelected2[1] == tileSelected1[1] && tileSelected2[1] == tileSelected1[1])
-            || (tileSelected2[0] == tileSelected1[0] && tileSelected2[0] == tileSelected1[0]
-            && tileSelected2[1] <= tileSelected1[1]+1 && tileSelected2[1] >= tileSelected1[1]-1))
-            /*&& tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key*/){
+    if(Math.abs(tileSelected1[0]-tileSelected2[0])+Math.abs(tileSelected1[1]-tileSelected2[1]) == 1){
         //Stuff
         //Temp the tiles
         let holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
@@ -170,6 +170,7 @@ checkAdjacent=function(){
         holdTile.x = spacing*tileSelected2[1] + offsetX;
         holdTile2.y = spacing*tileSelected1[0] + offsetY;
         holdTile2.x = spacing*tileSelected1[1] + offsetX;
+        //Array
         tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
         tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
         holdTile.setScale(1,1).setOrigin(0,0);
@@ -196,15 +197,16 @@ checkAdjacent=function(){
         holdTile = null;
         holdTile2 = null;
         
-    }
-    //Else reset 2nd tile
-    else{
+    }else{
+        //Else reset 2nd tile
+        tileSelected1 = null;
+        tileSelected2 = null;
         canSelect=true;
         tileSelected2 = null;
     }
 }
 //Check if tiles are in a row
-checkInARow=function(y1,x1){
+function checkInARow(y1,x1){
     //console.log(tileArray[y1][x1].texture.key);
     if((checkDown(y1,x1) + checkUp(y1,x1)) >= 2 && (checkRight(y1,x1) + checkLeft(y1,x1)) >= 2){
         toRemoveTemp.push([y1,x1]);
@@ -252,7 +254,7 @@ checkInARow=function(y1,x1){
     }
 }
 //Helper function
-checkDown=function(y1,x1){
+function checkDown(y1,x1){
     if(y1+1 <= tileArray.length-1 && (tileArray[y1][x1].texture.key == tileArray[y1+1][x1].texture.key)){
         //console.log("Push: " + [y1+1,x1]);
         toRemoveTemp.push([y1+1,x1]);   
@@ -261,7 +263,7 @@ checkDown=function(y1,x1){
     return 0;
 }
 //Helper function
-checkUp=function(y1,x1){
+function checkUp(y1,x1){
     if(y1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1-1][x1].texture.key)){
         //console.log("Push: " + [y1-1,x1]);
         toRemoveTemp.push([y1-1,x1]);
@@ -270,7 +272,7 @@ checkUp=function(y1,x1){
     return 0;
 }
 //Helper function
-checkRight=function(y1,x1){
+function checkRight(y1,x1){
     if(x1+1 <= tileArray[y1].length-1&& (tileArray[y1][x1].texture.key == tileArray[y1][x1+1].texture.key)){
         //console.log("Push: " + [y1,x1+1]);
         toRemoveTemp.push([y1,x1+1]);
@@ -279,7 +281,7 @@ checkRight=function(y1,x1){
     return 0;
 }
 //Helper function
-checkLeft=function(y1,x1){
+function checkLeft(y1,x1){
     if(x1-1 >= 0 && (tileArray[y1][x1].texture.key == tileArray[y1][x1-1].texture.key)){
         //console.log("Push: " + [y1,x1-1]);
         toRemoveTemp.push([y1,x1-1]);
@@ -288,20 +290,21 @@ checkLeft=function(y1,x1){
     return 0;
 }
 //Helper function
-removeTile=function(){
+function removeTile(){
     let tempRemove;
     while(toRemove.length>0){
         tempRemove = toRemove.pop()
         tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
     }
     reorganize();
+    console.log("running check player");
     if(checkPlayer()){
         reorganize()
     }
     canSelect = true;
 }
 //Reorganizes tiles so they fall down
-reorganize=function(){
+function reorganize(){
     let swapRow = -1;
     //Length
     for(let i = tileArray[0].length-1; i >= 0; i--){
@@ -321,9 +324,8 @@ reorganize=function(){
                         }                  
                         break;
                     }else{
-                        console.log("help me");
                         let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-                        if (rollOver == true && newTemp[1] == playerPosX){
+                        if (rollOver == true && i == playerPosX){
                             tileArray[k][i].setTexture('doggo');
                             console.log("rolled over");
                             rollOver = false;
@@ -341,56 +343,61 @@ reorganize=function(){
     updateDisplay(swapRow,tileArray[0].length-1,100);
 }
 //Recursion
-reorganize2=function(){
-    setTimeout(function(){
-        if(toSwap.length > 0){
-            let swapTemp = toSwap.shift();
-            let holdTile = tileArray[swapTemp[0]][swapTemp[2]];
-            let holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
-            //Adjust locations
-            /*holdTile.y = spacing*swapTemp[1] + offsetY;
-            holdTile.x = spacing*swapTemp[2] + offsetX;
-            holdTile2.y = spacing*swapTemp[0] + offsetY;
-            holdTile2.x = spacing*swapTemp[2] + offsetX;*/
-            //Changes position in array
-            tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
-            tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
-            reorganize2();
-        }else{
-            //checkPlayer();
-        }
-        return;
-    },/*100*/);
+async function reorganize2(){
+    //await sleep(delay);
+    if(toSwap.length > 0){
+        let swapTemp = toSwap.shift();
+        let holdTile = tileArray[swapTemp[0]][swapTemp[2]];
+        let holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
+        //Adjust locations
+        /*holdTile.y = spacing*swapTemp[1] + offsetY;
+        holdTile.x = spacing*swapTemp[2] + offsetX;
+        holdTile2.y = spacing*swapTemp[0] + offsetY;
+        holdTile2.x = spacing*swapTemp[2] + offsetX;*/
+        //Changes position in array
+        tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
+        tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
+        reorganize2();
+    }else{
+        //checkPlayer();
+    }
+    return;
 }
-checkPlayer=function(){
+function checkPlayer(){
     for(let i = 0; i< tileArray[0].length; i++){         
         if(tileArray[tileArray.length-1][i].texture.key == 'doggo')
         {
-             tileArray[tileArray.length-1][i].alpha = 0;
-             rollOver = true;
-             playerPosX = i  ;
-             //console.log("bottom reached");
-             return true;
+            tileArray[tileArray.length-1][i].alpha = 0;
+            rollOver = true;
+            playerPosX = i  ;
+            console.log("bottom reached");
+            return true;
         } 
      }
      return false;
 }
-function updateDisplay(y, x, delay) {
-    setTimeout(function(){
-        if (y < 0) {
-            //newTile();
-        } else {
-            for(let col = 0;col <= x;col++){
-                if(tileArray[y][col].alpha == 0){
-                    tileArray[y][col].alpha = 1;
-                }
-                tileArray[y][col].y = spacing*y + offsetY;
-                tileArray[y][col].x = spacing*col + offsetX;
+async function updateDisplay(y, x, delay) {
+    await sleep(delay);
+    if (y < 0) {
+        return;
+    } else {
+        for(let col = 0;col <= x;col++){
+            if(tileArray[y][col].alpha == 0){
+                tileArray[y][col].alpha = 1;
             }
-            updateDisplay(y-1,tileArray[0].length-1, delay);
+            tileArray[y][col].y = spacing*y + offsetY;
+            tileArray[y][col].x = spacing*col + offsetX;
+            console.log(y,col,tileArray[y][col].texture.key);
         }
-    },delay);
+        console.log("\n");
+        updateDisplay(y-1,tileArray[0].length-1, delay);
+    }
+    console.log("\n\n");
 }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /*
 //Adds new tiles to the empty slots
 newTile=function(){
