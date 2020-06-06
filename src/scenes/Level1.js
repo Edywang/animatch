@@ -57,26 +57,30 @@ class Level1 extends Phaser.Scene {
         this.instructions2 = this.add.text(20, 50, "Help the dog reach his owner.", instructionConfig);
 
         //place mom
-        var momSprite = this.add.sprite(355, 350 , 'mom').setOrigin(0,0).setScale(0.4,0.4);
+        let momSprite = this.add.sprite(355, 350 , 'mom').setOrigin(0,0).setScale(0.4,0.4);
         //Skip button
         momSprite.setInteractive();
         momSprite.on('clicked',function(){this.scene.start("animation2Scene");},this);
 
         //Initialize
         //Length
-        var playerTileX =  0;//Phaser.Math.Between(0,tileArray[0].length-1);
-        var playerTileY =  0;//Phaser.Math.Between(0,4);
-        var type;
-        for(var i = 0; i < tileArray[0].length; i++){
+        let playerTileX =  0;//Phaser.Math.Between(0,tileArray[0].length-1);
+        let playerTileY =  0;//Phaser.Math.Between(0,4);
+        let type;
+        for(let i = 0; i < tileArray[0].length; i++){
             //Height
-            for(var j = 0; j < tileArray.length; j++){
+            for(let j = 0; j < tileArray.length; j++){
                 //Choose random tile
                 if(i == playerTileX && j == playerTileY){
                     type = typeList.length-1;
                 }else{
-                    type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
+                    if(k == 9 && i == 0){
+                        type = 'frisbee'
+                    }else{
+                        type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
+                    }
                 }
-                var tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0);
+                let tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0);
                 //Allow tile to be clickable
                 tempTile.setInteractive();
                 tempTile.on('clicked',this.selected,this);
@@ -85,7 +89,7 @@ class Level1 extends Phaser.Scene {
                 tempTile.alpha = 0;
             }
         }
-        setVisible(tileArray.length-1,tileArray[0].length-1);
+        setVisible(tileArray.length-1,tileArray[0].length-1,300);
         //Add clicked action
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
@@ -136,18 +140,17 @@ class Level1 extends Phaser.Scene {
 //--------------------------
 //--------------------------
 //Set tiles to Visible
-setVisible=function(i,j){
+setVisible = function(y, x, delay) {
     setTimeout(function(){
-        if(i < 0 || j <0){
+        if (y < 0) {
             return;
+        } else {
+            for(let col = 0;col <= x;col++){
+                tileArray[y][col].alpha = 1;
+            }
+            setVisible(y-1,tileArray[0].length-1, delay);
         }
-        if(j == 0){
-            setVisible(i-1,tileArray[0].length-1);
-        }else{
-            setVisible(i,j-1);
-        }
-        tileArray[i][j].alpha = 1;
-    },40);
+    },delay);
 }
 //Check if adjacent tile is different type
 checkAdjacent=function(){
@@ -160,8 +163,8 @@ checkAdjacent=function(){
             /*&& tileArray[tileSelected1[0]][tileSelected1[1]].texture.key != tileArray[tileSelected2[0]][tileSelected2[1]].texture.key*/){
         //Stuff
         //Temp the tiles
-        var holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
-        var holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
+        let holdTile = tileArray[tileSelected1[0]][tileSelected1[1]];
+        let holdTile2 = tileArray[tileSelected2[0]][tileSelected2[1]];
         //Adjust the tiles
         holdTile.y = spacing*tileSelected2[0] + offsetY;
         holdTile.x = spacing*tileSelected2[1] + offsetX;
@@ -183,7 +186,7 @@ checkAdjacent=function(){
             tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile2;
             //holdTile2.setScale(1.1,1.1).setOrigin(0,0);
         }
-        for(var m=0;m<toRemove.length-1;m++){
+        for(let m=0;m<toRemove.length-1;m++){
             console.log(toRemove[m]);
         }   
         //Reset tiles selected
@@ -208,7 +211,7 @@ checkInARow=function(y1,x1){
         //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
         while(toRemoveTemp.length > 0){
-            var temp = toRemoveTemp.pop();
+            let temp = toRemoveTemp.pop();
             //console.log("Temp: " + temp);
             toRemove.push(temp);
         }
@@ -223,7 +226,7 @@ checkInARow=function(y1,x1){
         //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
         while(toRemoveTemp.length > 0){
-            var temp = toRemoveTemp.pop();
+            let temp = toRemoveTemp.pop();
             //console.log("Temp: " + temp);
             toRemove.push(temp);
         }
@@ -238,7 +241,7 @@ checkInARow=function(y1,x1){
         //console.log("Length: " + toRemoveTemp.length);
         game.sound.play('bark');
         while(toRemoveTemp.length > 0){
-            var temp = toRemoveTemp.pop();
+            let temp = toRemoveTemp.pop();
             //console.log("Temp: " + temp);
             toRemove.push(temp);
         }   
@@ -286,29 +289,48 @@ checkLeft=function(y1,x1){
 }
 //Helper function
 removeTile=function(){
-    var tempRemove;
+    let tempRemove;
     while(toRemove.length>0){
         tempRemove = toRemove.pop()
         tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
     }
     reorganize();
+    if(checkPlayer()){
+        reorganize()
+    }
+    canSelect = true;
 }
 //Reorganizes tiles so they fall down
 reorganize=function(){
+    let swapRow = -1;
     //Length
-    for(var i = tileArray[0].length-1; i >= 0; i--){
+    for(let i = tileArray[0].length-1; i >= 0; i--){
         //Height
-        for(var j = tileArray.length-1; j >= 1; j--){
+        for(let j = tileArray.length-1; j >= 0; j--){
             //If invisible
             if(tileArray[j][i].alpha == 0){
+                if(swapRow == -1){
+                    swapRow = j;
+                }
                 //Find nearest visible block
-                for(var k = j-1; k >= 0; k--){
+                for(let k = j; k >= 0; k--){
                     if(tileArray[k][i].alpha != 0){
                         //Drop all blocks
-                        for(var x=k;x>=0;x--){
+                        for(let x=k;x>=0;x--){
                             toSwap.push([x,x+(j-k),i]);
-                        }                        
+                        }                  
                         break;
+                    }else{
+                        console.log("help me");
+                        let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
+                        if (rollOver == true && newTemp[1] == playerPosX){
+                            tileArray[k][i].setTexture('doggo');
+                            console.log("rolled over");
+                            rollOver = false;
+                        }else{
+                            tileArray[k][i].setTexture(typeList[type]);
+                            console.log("changed type");
+                        }
                     }
                 }
                 break; 
@@ -316,49 +338,66 @@ reorganize=function(){
         }
     }
     reorganize2();
+    updateDisplay(swapRow,tileArray[0].length-1,100);
 }
 //Recursion
 reorganize2=function(){
     setTimeout(function(){
         if(toSwap.length > 0){
-            var swapTemp = toSwap.shift();
-            var holdTile = tileArray[swapTemp[0]][swapTemp[2]];
-            var holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
+            let swapTemp = toSwap.shift();
+            let holdTile = tileArray[swapTemp[0]][swapTemp[2]];
+            let holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
             //Adjust locations
-            holdTile.y = spacing*swapTemp[1] + offsetY;
+            /*holdTile.y = spacing*swapTemp[1] + offsetY;
             holdTile.x = spacing*swapTemp[2] + offsetX;
             holdTile2.y = spacing*swapTemp[0] + offsetY;
-            holdTile2.x = spacing*swapTemp[2] + offsetX;
+            holdTile2.x = spacing*swapTemp[2] + offsetX;*/
             //Changes position in array
             tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
             tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
             reorganize2();
         }else{
-            checkPlayer();
+            //checkPlayer();
         }
         return;
-    },100);
+    },/*100*/);
 }
 checkPlayer=function(){
-    for(var i = 0; i< tileArray[0].length; i++){         
+    for(let i = 0; i< tileArray[0].length; i++){         
         if(tileArray[tileArray.length-1][i].texture.key == 'doggo')
         {
              tileArray[tileArray.length-1][i].alpha = 0;
              rollOver = true;
              playerPosX = i  ;
-             console.log("bottom reached");
-             reorganize();
-             return;
+             //console.log("bottom reached");
+             return true;
         } 
      }
-     newTile();
+     return false;
 }
+function updateDisplay(y, x, delay) {
+    setTimeout(function(){
+        if (y < 0) {
+            //newTile();
+        } else {
+            for(let col = 0;col <= x;col++){
+                if(tileArray[y][col].alpha == 0){
+                    tileArray[y][col].alpha = 1;
+                }
+                tileArray[y][col].y = spacing*y + offsetY;
+                tileArray[y][col].x = spacing*col + offsetX;
+            }
+            updateDisplay(y-1,tileArray[0].length-1, delay);
+        }
+    },delay);
+}
+/*
 //Adds new tiles to the empty slots
 newTile=function(){
     //Length
-    for(var i = tileArray[0].length-1; i >= 0; i--){
+    for(let i = tileArray[0].length-1; i >= 0; i--){
         //Height
-        for(var j = tileArray.length-1; j >= 0; j--){
+        for(let j = tileArray.length-1; j >= 0; j--){
             if(tileArray[j][i].alpha == 0){
                 toAdd.push([j,i])
             }
@@ -369,8 +408,8 @@ newTile=function(){
 newTile2=function(){
     setTimeout(function(){
         if(toAdd.length > 0){
-            var newTemp = toAdd.shift();
-            var type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
+            let newTemp = toAdd.shift();
+            let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
             //If player is at the bottom
             if (rollOver == true && newTemp[1] == playerPosX){
                 tileArray[newTemp[0]][playerPosX].setTexture('doggo');
@@ -387,7 +426,7 @@ newTile2=function(){
         }
         return;
     },100)
-}
+}*/
 /*checkAllTiles=function(){
     //Length
     for(var i = tileArray[0].length-1; i >= 0; i--){
