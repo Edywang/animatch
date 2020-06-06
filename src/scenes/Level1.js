@@ -74,8 +74,8 @@ class Level1 extends Phaser.Scene {
                 if(i == playerTileX && j == playerTileY){
                     type = typeList.length-1;
                 }else{
-                    if(k == 9 && i == 0){
-                        type = 'frisbee'
+                    if(j == 9 && (i == 0 || i == 1 || i == 2)){
+                        type = 'frisbee';
                     }else{
                         type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
                     }
