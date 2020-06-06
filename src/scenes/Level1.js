@@ -101,7 +101,7 @@ class Level1 extends Phaser.Scene {
         if(tileArray[5][tileArray[0].length-1].texture.key == 'Player')
         {
             console.log("success");
-            this.scene.start("animation1Scene");
+            this.scene.start("animation2Scene");
         }   
     }
     //If you select the tile
