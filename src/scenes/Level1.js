@@ -113,7 +113,7 @@ class Level1 extends Phaser.Scene {
                 //Store the array values of the tile
                 tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
                 //Make the selected tile slightly bigger
-                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.1,1.1).setOrigin(0.05,0.05);
+                tileArray[tileSelected1[0]][tileSelected1[1]].setScale(1.2,1.2).setOrigin(0.1,0.1);
                 game.sound.play('beep');
             }
             //Selected a tile previously
