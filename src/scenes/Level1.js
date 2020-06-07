@@ -65,7 +65,7 @@ class Level1 extends Phaser.Scene {
         //Initialize
         //Length
         let playerTileX =  0;//Phaser.Math.Between(0,tileArray[0].length-1);
-        let playerTileY =  8;//Phaser.Math.Between(0,4);
+        let playerTileY =  0;//Phaser.Math.Between(0,4);
         let type;
         for(let i = 0; i < tileArray[0].length; i++){
             //Height
@@ -74,11 +74,7 @@ class Level1 extends Phaser.Scene {
                 if(i == playerTileX && j == playerTileY){
                     type = typeList.length-1;
                 }else{
-                    if(j == 9 && (i == 0 || i == 1 || i == 2)){
-                        type = 1;
-                    }else{
                         type = Phaser.Math.Between(0,typeList.length-1 - specialTiles);
-                    }
                 }
                 let tempTile = new Tile(this,spacing*i + offsetX,spacing*j + offsetY,typeList[type],0).setScale(1,1).setOrigin(0, 0);
                 //Allow tile to be clickable
