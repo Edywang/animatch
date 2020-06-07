@@ -290,43 +290,43 @@ function checkLeft(y1,x1){
     return 0;
 }
 //Helper function
-function removeTile(){
+async function removeTile(){
     let tempRemove;
     while(toRemove.length>0){
         tempRemove = toRemove.pop()
         tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
     }
-    reorganize();
+    await reorganize();
     console.log("running check player");
-    if(checkPlayer()){
+    /*if(checkPlayer()){
         reorganize()
-    }
+    }*/
     canSelect = true;
 }
 //Reorganizes tiles so they fall down
-function reorganize(){
+async function reorganize(){
     let swapRow = -1;
     //Length
-    for(let i = tileArray[0].length-1; i >= 0; i--){
+    for(let length = tileArray[0].length-1; length >= 0; length--){
         //Height
-        for(let j = tileArray.length-1; j >= 0; j--){
+        for(let height = tileArray.length-1; height >= 0; height--){
             //If invisible
-            if(tileArray[j][i].alpha == 0){
+            if(tileArray[height][length].alpha == 0){
                 if(swapRow == -1){
-                    swapRow = j;
+                    swapRow = height;
                 }
-                //Find nearest visible block
-                for(let k = j; k >= 0; k--){
-                    if(tileArray[k][i].alpha != 0){
+                for(let heightInvisible = height; heightInvisible >= 0; heightInvisible--){
+                    //Find nearest visible block
+                    if(tileArray[heightInvisible][length].alpha != 0){
                         //Drop all blocks
-                        for(let x=k;x>=0;x--){
-                            toSwap.push([x,x+(j-k),i]);
-                        }                  
+                        for(let visible=heightInvisible;visible>=0;visible--){
+                            toSwap.push([visible,visible+(height-heightInvisible),length]);
+                        }      
                         break;
                     }else{
                         let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-                        if (tileArray[k][i].texture.key!='doggo'){
-                            tileArray[k][i].setTexture(typeList[type]);
+                        if (tileArray[heightInvisible][length].texture.key!='doggo'){
+                            tileArray[heightInvisible][length].setTexture(typeList[type]);
                             console.log("changed type");
                         }
                     }
@@ -335,8 +335,11 @@ function reorganize(){
             }
         }
     }
+    console.log("Done reorganize, about to start reorganize2")
     reorganize2();
-    updateDisplay(swapRow,tileArray[0].length-1,100);
+    console.log("Done reorganize2, about to start updateDisplay")
+    await updateDisplay(swapRow,tileArray[0].length-1,1000);
+    console.log("Done updateDisplay")
 }
 //Recursion
 async function reorganize2(){
@@ -361,8 +364,7 @@ async function reorganize2(){
 }
 function checkPlayer(){
     for(let i = 0; i< tileArray[0].length; i++){         
-        if(tileArray[tileArray.length-1][i].texture.key == 'doggo')
-        {
+        if(tileArray[tileArray.length-1][i].texture.key == 'doggo') {
             tileArray[tileArray.length-1][i].alpha = 0;
             console.log("bottom reached");
             return true;
@@ -371,23 +373,38 @@ function checkPlayer(){
      return false;
 }
 async function updateDisplay(y, x, delay) {
-    await sleep(delay);
-    if (y < 0) {
+    for(let row = y;row >= 0;row--){
+        for(let col = 0;col <= x;col++){
+            if(tileArray[y][col].alpha == 0){
+                console.log('last');
+                tileArray[y][col].alpha = 1;
+            }else{
+                console.log("run me");
+            }
+            tileArray[y][col].y = spacing*y + offsetY;
+            tileArray[y][col].x = spacing*col + offsetX;
+        }
+        await sleep(delay);
+    }
+    /*if (y < 0) {
         return;
     } else {
         for(let col = 0;col <= x;col++){
             if(tileArray[y][col].alpha == 0){
-                await sleep(delay);
+                console.log('last');
                 tileArray[y][col].alpha = 1;
+            }else{
+                console.log("run me");
             }
             tileArray[y][col].y = spacing*y + offsetY;
             tileArray[y][col].x = spacing*col + offsetX;
-            console.log(y,col,tileArray[y][col].texture.key);
+            //console.log(y,col,tileArray[y][col].texture.key);
         }
-        console.log("\n");
+        //console.log("\n");
+        await sleep(delay);
         updateDisplay(y-1,tileArray[0].length-1, delay);
     }
-    console.log("\n\n");
+    //console.log("\n\n");*/
 }
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
