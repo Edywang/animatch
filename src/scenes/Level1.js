@@ -85,7 +85,7 @@ class Level1 extends Phaser.Scene {
                 tempTile.alpha = 0;
             }
         }
-        setVisible(tileArray.length-1,tileArray[0].length-1,70);
+        updateDisplay(tileArray.length-1,70);
         //Add clicked action
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
@@ -129,25 +129,32 @@ class Level1 extends Phaser.Scene {
         }
     }
 }
-//--------------------------
+// --------------------------
 //Global Functions
 //(Level functions that will be repetitivly used)
 //--------------------------
 //--------------------------
 //--------------------------
-//Set tiles to Visible
-async function setVisible(y, x, delay) {
-    for (let row = y; row >= 0; row--) {
-        for (let col = 0; col <= x; col++) {
-            tileArray[row][col].alpha = 1;
-        }
+// Updates the posisitions and alphas of all tiles
+async function updateDisplay(y, delay) {
+    for(let row = y;row >= 0;row--){
         await sleep(delay);
+        for(let col = 0;col <= tileArray[0].length-1;col++){
+            tileArray[row][col].y = spacing*row + offsetY;
+            tileArray[row][col].x = spacing*col + offsetX;
+            if(tileArray[row][col].alpha == 0){
+                //console.log('last');
+                tileArray[row][col].alpha = 1;
+            }else{
+                //console.log("run me");
+            }
+        }
     }
 }
-//Check if adjacent tile is different type
-function checkAdjacent(){
+// Check if adjacent tile is different type
+function checkAdjacent() {
     canSelect = false;
-    //Check if adjacent
+    // Check if adjacent
     if(Math.abs(tileSelected1[0]-tileSelected2[0])+Math.abs(tileSelected1[1]-tileSelected2[1]) == 1){
         //Stuff
         //Temp the tiles
@@ -324,14 +331,6 @@ async function reorganize(){
         }
     }
     //console.log("Done reorganize, about to start reorganize2")
-    reorganize2();
-    //console.log("Done reorganize2, about to start updateDisplay")
-    console.log("Reorganizing from " + swapRow);
-    await updateDisplay(swapRow,tileArray[0].length-1,70);
-    //console.log("Done updateDisplay")
-}
-//Recursion
-async function reorganize2(){
     //await sleep(delay);
     while(toSwap.length > 0){
         let swapTemp = toSwap.shift();
@@ -341,6 +340,10 @@ async function reorganize2(){
         tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
         tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
     }
+    //console.log("Done reorganize2, about to start updateDisplay")
+    //console.log("Reorganizing from " + swapRow);
+    await updateDisplay(swapRow,70);
+    //console.log("Done updateDisplay")
 }
 // Checks if player has reached the bottom
 function checkPlayer(){
@@ -352,22 +355,6 @@ function checkPlayer(){
         } 
      }
      return false;
-}
-// Updates the posisitions and alphas of all tiles
-async function updateDisplay(y, x, delay) {
-    for(let row = y;row >= 0;row--){
-        for(let col = 0;col <= x;col++){
-            tileArray[row][col].y = spacing*row + offsetY;
-            tileArray[row][col].x = spacing*col + offsetX;
-            if(tileArray[row][col].alpha == 0){
-                //console.log('last');
-                tileArray[row][col].alpha = 1;
-            }else{
-                //console.log("run me");
-            }
-        }
-        await sleep(delay);
-    }
 }
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
