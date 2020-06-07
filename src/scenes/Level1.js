@@ -85,7 +85,7 @@ class Level1 extends Phaser.Scene {
                 tempTile.alpha = 0;
             }
         }
-        setVisible(tileArray.length-1,tileArray[0].length-1,100);
+        setVisible(tileArray.length-1,tileArray[0].length-1,70);
         //Add clicked action
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
@@ -143,14 +143,6 @@ async function setVisible(y, x, delay) {
         }
         await sleep(delay);
     }
-    // await sleep(delay);
-    // if (y < 0) {
-    //     return;
-    // } else {
-    //     for(let col = 0;col <= x;col++){
-    //         tileArray[y][col].alpha = 1;
-    //     }
-    //     setVisible(y-1,tileArray[0].length-1, delay);
 }
 //Check if adjacent tile is different type
 function checkAdjacent(){
@@ -308,7 +300,7 @@ async function reorganize(){
         for(let height = tileArray.length-1; height >= 0; height--){
             //If invisible
             if(tileArray[height][length].alpha == 0){
-                if(swapRow == -1){
+                if(height > swapRow){
                     swapRow = height;
                 }
                 for(let heightInvisible = height; heightInvisible >= 0; heightInvisible--){
@@ -334,29 +326,21 @@ async function reorganize(){
     //console.log("Done reorganize, about to start reorganize2")
     reorganize2();
     //console.log("Done reorganize2, about to start updateDisplay")
-    await updateDisplay(swapRow,tileArray[0].length-1,100);
+    console.log("Reorganizing from " + swapRow);
+    await updateDisplay(swapRow,tileArray[0].length-1,70);
     //console.log("Done updateDisplay")
 }
 //Recursion
 async function reorganize2(){
     //await sleep(delay);
-    if(toSwap.length > 0){
+    while(toSwap.length > 0){
         let swapTemp = toSwap.shift();
         let holdTile = tileArray[swapTemp[0]][swapTemp[2]];
         let holdTile2 = tileArray[swapTemp[1]][swapTemp[2]];
-        //Adjust locations
-        /*holdTile.y = spacing*swapTemp[1] + offsetY;
-        holdTile.x = spacing*swapTemp[2] + offsetX;
-        holdTile2.y = spacing*swapTemp[0] + offsetY;
-        holdTile2.x = spacing*swapTemp[2] + offsetX;*/
         //Changes position in array
         tileArray[swapTemp[1]][swapTemp[2]] = holdTile;
         tileArray[swapTemp[0]][swapTemp[2]] = holdTile2;
-        reorganize2();
-    }else{
-        //checkPlayer();
     }
-    return;
 }
 // Checks if player has reached the bottom
 function checkPlayer(){
@@ -373,14 +357,14 @@ function checkPlayer(){
 async function updateDisplay(y, x, delay) {
     for(let row = y;row >= 0;row--){
         for(let col = 0;col <= x;col++){
+            tileArray[row][col].y = spacing*row + offsetY;
+            tileArray[row][col].x = spacing*col + offsetX;
             if(tileArray[row][col].alpha == 0){
                 //console.log('last');
                 tileArray[row][col].alpha = 1;
             }else{
                 //console.log("run me");
             }
-            tileArray[row][col].y = spacing*row + offsetY;
-            tileArray[row][col].x = spacing*col + offsetX;
         }
         await sleep(delay);
     }
