@@ -89,7 +89,7 @@ class Level1 extends Phaser.Scene {
                 tempTile.alpha = 0;
             }
         }
-        setVisible(tileArray.length-1,tileArray[0].length-1,300);
+        setVisible(tileArray.length-1,tileArray[0].length-1,100);
         //Add clicked action
         this.input.on('gameobjectup', function (pointer, gameObject){
             gameObject.emit('clicked', gameObject);
@@ -104,7 +104,7 @@ class Level1 extends Phaser.Scene {
         }
         if(tileArray[5][tileArray[0].length-1].texture.key == 'doggo')
         {
-            console.log("success");
+            //console.log("success");
             this.scene.start("animation2Scene");
         }   
     }
@@ -112,7 +112,7 @@ class Level1 extends Phaser.Scene {
     selected(tempTile){
         if(canSelect){
             //No previous selected tile
-            console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
+            //console.log((tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing);
             if(tileSelected1 == null){
                 //Store the array values of the tile
                 tileSelected1 = [(tempTile.y-offsetY)/spacing,(tempTile.x-offsetX)/spacing];
@@ -174,7 +174,7 @@ function checkAdjacent(){
         tileArray[tileSelected1[0]][tileSelected1[1]] = holdTile2;
         tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile;
         holdTile.setScale(1,1).setOrigin(0,0);
-        console.log(tileSelected2[0],tileSelected2[1]);
+        //console.log(tileSelected2[0],tileSelected2[1]);
         checkInARow(tileSelected2[0],tileSelected2[1]);
         //console.log(tileSelected1[0],tileSelected1[1]);
         checkInARow(tileSelected1[0],tileSelected1[1]);
@@ -187,9 +187,9 @@ function checkAdjacent(){
             tileArray[tileSelected2[0]][tileSelected2[1]] = holdTile2;
             //holdTile2.setScale(1.1,1.1).setOrigin(0,0);
         }
-        for(let m=0;m<toRemove.length-1;m++){
-            console.log(toRemove[m]);
-        }   
+        //for(let m=0;m<toRemove.length-1;m++){
+        //    console.log(toRemove[m]);
+        //}   
         //Reset tiles selected
         removeTile();
         tileSelected1 = null;
@@ -297,10 +297,10 @@ async function removeTile(){
         tileArray[tempRemove[0]][tempRemove[1]].alpha = 0;
     }
     await reorganize();
-    console.log("running check player");
-    /*if(checkPlayer()){
+    //console.log("running check player");
+    if(checkPlayer()){
         reorganize()
-    }*/
+    }
     canSelect = true;
 }
 //Reorganizes tiles so they fall down
@@ -327,7 +327,7 @@ async function reorganize(){
                         let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
                         if (tileArray[heightInvisible][length].texture.key!='doggo'){
                             tileArray[heightInvisible][length].setTexture(typeList[type]);
-                            console.log("changed type");
+                            //console.log("changed type");
                         }
                     }
                 }
@@ -335,11 +335,11 @@ async function reorganize(){
             }
         }
     }
-    console.log("Done reorganize, about to start reorganize2")
+    //console.log("Done reorganize, about to start reorganize2")
     reorganize2();
-    console.log("Done reorganize2, about to start updateDisplay")
-    await updateDisplay(swapRow,tileArray[0].length-1,1000);
-    console.log("Done updateDisplay")
+    //console.log("Done reorganize2, about to start updateDisplay")
+    await updateDisplay(swapRow,tileArray[0].length-1,100);
+    //console.log("Done updateDisplay")
 }
 //Recursion
 async function reorganize2(){
@@ -362,97 +362,33 @@ async function reorganize2(){
     }
     return;
 }
+// Checks if player has reached the bottom
 function checkPlayer(){
     for(let i = 0; i< tileArray[0].length; i++){         
         if(tileArray[tileArray.length-1][i].texture.key == 'doggo') {
             tileArray[tileArray.length-1][i].alpha = 0;
-            console.log("bottom reached");
+            //console.log("bottom reached");
             return true;
         } 
      }
      return false;
 }
+// Updates the posisitions and alphas of all tiles
 async function updateDisplay(y, x, delay) {
     for(let row = y;row >= 0;row--){
         for(let col = 0;col <= x;col++){
-            if(tileArray[y][col].alpha == 0){
-                console.log('last');
-                tileArray[y][col].alpha = 1;
+            if(tileArray[row][col].alpha == 0){
+                //console.log('last');
+                tileArray[row][col].alpha = 1;
             }else{
-                console.log("run me");
+                //console.log("run me");
             }
-            tileArray[y][col].y = spacing*y + offsetY;
-            tileArray[y][col].x = spacing*col + offsetX;
+            tileArray[row][col].y = spacing*row + offsetY;
+            tileArray[row][col].x = spacing*col + offsetX;
         }
         await sleep(delay);
     }
-    /*if (y < 0) {
-        return;
-    } else {
-        for(let col = 0;col <= x;col++){
-            if(tileArray[y][col].alpha == 0){
-                console.log('last');
-                tileArray[y][col].alpha = 1;
-            }else{
-                console.log("run me");
-            }
-            tileArray[y][col].y = spacing*y + offsetY;
-            tileArray[y][col].x = spacing*col + offsetX;
-            //console.log(y,col,tileArray[y][col].texture.key);
-        }
-        //console.log("\n");
-        await sleep(delay);
-        updateDisplay(y-1,tileArray[0].length-1, delay);
-    }
-    //console.log("\n\n");*/
 }
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-/*
-//Adds new tiles to the empty slots
-newTile=function(){
-    //Length
-    for(let i = tileArray[0].length-1; i >= 0; i--){
-        //Height
-        for(let j = tileArray.length-1; j >= 0; j--){
-            if(tileArray[j][i].alpha == 0){
-                toAdd.push([j,i])
-            }
-        }
-    }   
-    newTile2();
-}
-newTile2=function(){
-    setTimeout(function(){
-        if(toAdd.length > 0){
-            let newTemp = toAdd.shift();
-            let type = Phaser.Math.Between(0,typeList.length - 1 - specialTiles);
-            //If player is at the bottom
-            if (rollOver == true && newTemp[1] == playerPosX){
-                tileArray[newTemp[0]][playerPosX].setTexture('doggo');
-                tileArray[newTemp[0]][playerPosX].alpha = 1;
-                console.log("rolled over");
-                rollOver = false;
-            }else{
-                tileArray[newTemp[0]][newTemp[1]].setTexture(typeList[type]);
-                tileArray[newTemp[0]][newTemp[1]].alpha = 1;
-            }
-            newTile2();
-        }else{
-            canSelect = true;
-        }
-        return;
-    },100)
-}*/
-/*checkAllTiles=function(){
-    //Length
-    for(var i = tileArray[0].length-1; i >= 0; i--){
-        //Height
-        for(var j = tileArray.length-1; j >= 0; j--){
-            checkInARow(i,j);
-        }
-    }
-    removeTile();
-}*/
